@@ -14,10 +14,16 @@ repositories {
 dependencies {
 
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+
     compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.2'
+
+    ////// MongoDB
     compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.8.2'
 
-
+    ////// CLI PARSING
+    compile group: 'com.github.rvesse', name: 'airline', version: '2.5.0'
+    
     ////// LOGGING
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.0'
