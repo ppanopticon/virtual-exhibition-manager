@@ -1,4 +1,4 @@
-package ch.unibas.dmi.dbis.vrem.handlers;
+package ch.unibas.dmi.dbis.vrem.server.handlers.basic;
 
 import spark.Request;
 

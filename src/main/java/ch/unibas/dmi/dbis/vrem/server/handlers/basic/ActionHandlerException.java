@@ -1,4 +1,4 @@
-package ch.unibas.dmi.dbis.vrem.handlers;
+package ch.unibas.dmi.dbis.vrem.server.handlers.basic;
 
 public class ActionHandlerException extends Exception {
     private static final long serialVersionUID = -3925174394057916202L;

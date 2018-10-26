@@ -1,6 +1,7 @@
-package ch.unibas.dmi.dbis.vrem.handlers;
+package ch.unibas.dmi.dbis.vrem.server.handlers.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
+import ch.unibas.dmi.dbis.vrem.server.handlers.basic.ParsingActionHandler;
 import org.bson.types.ObjectId;
 
 import java.util.Map;

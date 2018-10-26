@@ -1,5 +1,7 @@
-package ch.unibas.dmi.dbis.vrem.handlers;
+package ch.unibas.dmi.dbis.vrem.server.handlers.basic;
 
+import ch.unibas.dmi.dbis.vrem.server.handlers.basic.ActionHandler;
+import ch.unibas.dmi.dbis.vrem.server.handlers.basic.MethodNotSupportedException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import spark.Request;
