@@ -45,7 +45,7 @@ public class WallCodec implements Codec<Wall> {
                     position = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_COLOR:
-                    position = this.vectorCodec.decode(reader, decoderContext);
+                    color = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_EXHIBITS:
                     reader.readStartArray();
