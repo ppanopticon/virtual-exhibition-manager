@@ -4,21 +4,24 @@ import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.handlers.ListExhibitionsHandler;
 import ch.unibas.dmi.dbis.vrem.handlers.LoadExhibitionHandler;
-import com.google.gson.Gson;
+
+import ch.unibas.dmi.dbis.vrem.handlers.RequestContentHandler;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static spark.Spark.*;
 
 public class VREM {
-
-
     /** */
     private static final String MONGO_HOST = "127.0.0.1";
 
@@ -27,6 +30,9 @@ public class VREM {
 
     /** */
     private static final String MONGO_DATABASE = "vrem";
+
+    /** */
+    private static final Path DOCUMENT_ROOT = Paths.get("/Users/gassra02/Downloads/vrem");
 
     /**
      *
@@ -42,8 +48,8 @@ public class VREM {
         final VREMReader reader = new VREMReader(db);
 
 
-
-
+        /* Register routes. */
+        get("/content/get/:path", new RequestContentHandler(DOCUMENT_ROOT));
         get("/exhibitions/list", new ListExhibitionsHandler(reader));
         get("/exhibitions/load/:id", new LoadExhibitionHandler(reader));
     }
