@@ -1,5 +1,6 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
+import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 
 import org.bson.BsonReader;
@@ -8,6 +9,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 
 import java.net.MalformedURLException;
@@ -22,6 +24,8 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
     private final String FIELD_NAME_TYPE = "type";
     private final String FIELD_NAME_URL = "url";
 
+    public CulturalHeritageObjectCodec(CodecRegistry registry) {
+    }
 
     @Override
     public CulturalHeritageObject decode(BsonReader reader, DecoderContext decoderContext) {
@@ -67,7 +71,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
     @Override
     public void encode(BsonWriter writer, CulturalHeritageObject value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeObjectId(FIELD_NAME_OBJECTID, value.id);
+        writer.writeObjectId(FIELD_NAME_OBJECTID, new ObjectId(value.id));
         writer.writeString(FIELD_NAME_NAME, value.name);
         writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
         writer.writeString(FIELD_NAME_TYPE, value.type.name());

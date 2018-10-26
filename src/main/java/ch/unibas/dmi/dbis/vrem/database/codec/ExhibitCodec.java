@@ -9,13 +9,15 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ExhibitCodec implements Codec<Exhibit> {
-    private final String FIELD_NAME_NAME = "name";
+    public final String FIELD_NAME_ID = "_id";
+    public final String FIELD_NAME_NAME = "name";
     private final String FIELD_NAME_DESCRIPTION = "description";
     private final String FIELD_NAME_TYPE = "type";
     private final String FIELD_NAME_URL = "url";
@@ -23,14 +25,14 @@ public class ExhibitCodec implements Codec<Exhibit> {
     private final String FIELD_NAME_SIZE = "size";
 
 
-    private final VectorCodec codec;
+    private final Codec<Vector3f> codec;
 
     /**
      *
-     * @param codec
+     * @param registry
      */
-    public ExhibitCodec(VectorCodec codec) {
-        this.codec = codec;
+    public ExhibitCodec(CodecRegistry registry) {
+        this.codec = registry.get(Vector3f.class);
     }
 
     @Override

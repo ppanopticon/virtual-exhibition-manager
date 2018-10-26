@@ -1,6 +1,7 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
 
 import org.bson.BsonReader;
@@ -9,18 +10,26 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WallCodec implements Codec<Wall> {
 
 
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_COLOR = "color";
+    private final String FIELD_NAME_EXHIBITS = "exhibits";
 
-    private final VectorCodec codec;
+    private final Codec<Vector3f> vectorCodec;
+
+    private final Codec<Exhibit> exhibitCodec;
 
 
-    public WallCodec(VectorCodec codec) {
-        this.codec = codec;
+    public WallCodec(CodecRegistry registry) {
+        this.vectorCodec = registry.get(Vector3f.class);
+        this.exhibitCodec = registry.get(Exhibit.class);
     }
 
 
@@ -29,13 +38,22 @@ public class WallCodec implements Codec<Wall> {
         reader.readStartDocument();
         Vector3f position = null;
         Vector3f color = null;
+        List<Exhibit> exhibits = new ArrayList<>();
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
                 case FIELD_NAME_POSITION:
-                    position = this.codec.decode(reader, decoderContext);
+                    position = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_COLOR:
-                    position = this.codec.decode(reader, decoderContext);
+                    position = this.vectorCodec.decode(reader, decoderContext);
+                    break;
+                case FIELD_NAME_EXHIBITS:
+                    reader.readStartArray();
+                    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                        exhibits.add(this.exhibitCodec.decode(reader, decoderContext));
+                    }
+                    reader.readEndArray();
+                    position = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 default:
                     reader.skipValue();
@@ -49,10 +67,16 @@ public class WallCodec implements Codec<Wall> {
     @Override
     public void encode(BsonWriter writer, Wall value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeName(FIELD_NAME_POSITION);
-        this.codec.encode(writer, value.position, encoderContext);
-        writer.writeName(FIELD_NAME_COLOR);
-        this.codec.encode(writer, value.color, encoderContext);
+            writer.writeName(FIELD_NAME_POSITION);
+            this.vectorCodec.encode(writer, value.position, encoderContext);
+            writer.writeName(FIELD_NAME_COLOR);
+            this.vectorCodec.encode(writer, value.color, encoderContext);
+            writer.writeName(FIELD_NAME_EXHIBITS);
+            writer.writeStartArray();
+                for (Exhibit exhibit : value.exhibits) {
+                    this.exhibitCodec.encode(writer, exhibit, encoderContext);
+                }
+            writer.writeEndArray();
         writer.writeEndDocument();
     }
 

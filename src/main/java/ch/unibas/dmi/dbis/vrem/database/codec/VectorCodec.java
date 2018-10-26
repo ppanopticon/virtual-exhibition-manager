@@ -7,12 +7,18 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 public class VectorCodec implements Codec<Vector3f> {
 
     private final String FIELD_NAME_X = "x";
     private final String FIELD_NAME_Y = "y";
     private final String FIELD_NAME_Z = "z";
+
+
+    public VectorCodec(CodecRegistry registry) {
+
+    }
 
     @Override
     public Vector3f decode(BsonReader reader, DecoderContext decoderContext) {

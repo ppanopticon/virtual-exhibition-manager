@@ -10,6 +10,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,18 +24,17 @@ public class RoomCodec implements Codec<Room> {
     private final String FIELD_NAME_WALLS = "walls";
 
 
-    private final WallCodec wallCodec;
+    private final Codec<Wall> wallCodec;
 
-    private final VectorCodec vectorCodec;
+    private final Codec<Vector3f> vectorCodec;
 
     /**
      *
-     * @param wallCodec
-     * @param vectorCodec
+     * @param registry
      */
-    public RoomCodec(WallCodec wallCodec, VectorCodec vectorCodec) {
-        this.wallCodec = wallCodec;
-        this.vectorCodec = vectorCodec;
+    public RoomCodec(CodecRegistry registry) {
+        this.wallCodec = registry.get(Wall.class);
+        this.vectorCodec = registry.get(Vector3f.class);
     }
 
     /**
@@ -65,17 +65,17 @@ public class RoomCodec implements Codec<Room> {
                     position = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_ENTRYPOINT:
-                    position = this.vectorCodec.decode(reader, decoderContext);
+                    entrypoint = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_WALLS:
                     reader.readStartDocument();
-                    reader.readName();
+                    reader.readName(Direction.NORTH.name().toLowerCase());
                     walls.put(Direction.NORTH, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName();
+                    reader.readName(Direction.EAST.name().toLowerCase());
                     walls.put(Direction.EAST, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName();
+                    reader.readName(Direction.SOUTH.name().toLowerCase());
                     walls.put(Direction.SOUTH, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName();
+                    reader.readName(Direction.WEST.name().toLowerCase());
                     walls.put(Direction.WEST, this.wallCodec.decode(reader, decoderContext));
                     reader.readEndDocument();
                     break;
@@ -85,7 +85,9 @@ public class RoomCodec implements Codec<Room> {
             }
         }
         reader.readEndDocument();
-        return new Room(text, size, position, entrypoint);
+        final Room room = new Room(text, size, position, entrypoint);
+        room.walls.putAll(walls);
+        return room;
     }
 
     @Override
