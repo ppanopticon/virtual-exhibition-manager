@@ -20,7 +20,7 @@ public class ExhibitCodec implements Codec<Exhibit> {
     public final String FIELD_NAME_NAME = "name";
     private final String FIELD_NAME_DESCRIPTION = "description";
     private final String FIELD_NAME_TYPE = "type";
-    private final String FIELD_NAME_URL = "url";
+    private final String FIELD_NAME_PATH = "path";
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_SIZE = "size";
 
@@ -42,7 +42,7 @@ public class ExhibitCodec implements Codec<Exhibit> {
         String name = null;
         String description = null;
         CulturalHeritageObject.CHOType type = null;
-        URL url = null;
+        String path = null;
         Vector3f position = null;
         Vector3f size = null;
 
@@ -57,12 +57,8 @@ public class ExhibitCodec implements Codec<Exhibit> {
                 case FIELD_NAME_TYPE:
                     type = CulturalHeritageObject.CHOType.valueOf(reader.readString());
                     break;
-                case FIELD_NAME_URL:
-                    try {
-                        url = new URL(reader.readString());
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                case FIELD_NAME_PATH:
+                    path = reader.readString();
                     break;
                 case FIELD_NAME_POSITION:
                     position = this.codec.decode(reader, decoderContext);
@@ -76,7 +72,8 @@ public class ExhibitCodec implements Codec<Exhibit> {
             }
         }
         reader.readEndDocument();
-        final Exhibit object = new Exhibit(id, name, url, type);
+        if (id == null) id = new ObjectId();
+        final Exhibit object = new Exhibit(id, name, path, type);
         object.description = description;
         object.position = position;
         object.size = size;
@@ -89,7 +86,7 @@ public class ExhibitCodec implements Codec<Exhibit> {
         writer.writeString(FIELD_NAME_NAME, value.name);
         writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
         writer.writeString(FIELD_NAME_TYPE, value.type.name());
-        writer.writeString(FIELD_NAME_URL, value.path.toString());
+        writer.writeString(FIELD_NAME_PATH, value.path.toString());
         writer.writeName(FIELD_NAME_POSITION);
         this.codec.encode(writer, value.position, encoderContext);
         writer.writeName(FIELD_NAME_SIZE);

@@ -20,7 +20,7 @@ public class VREMCodecProvider implements CodecProvider {
         } else if (clazz == Wall.class) {
             return (Codec<T>)new WallCodec(registry);
         } else if (clazz == Exhibit.class) {
-            return (Codec<T>)new ExhibitionCodec(registry);
+            return (Codec<T>)new ExhibitCodec(registry);
         } else if (clazz == CulturalHeritageObject.class) {
             return (Codec<T>)new CulturalHeritageObjectCodec(registry);
         } else if (clazz == Vector3f.class) {

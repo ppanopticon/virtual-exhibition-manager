@@ -22,7 +22,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
     private final String FIELD_NAME_NAME = "name";
     private final String FIELD_NAME_DESCRIPTION = "description";
     private final String FIELD_NAME_TYPE = "type";
-    private final String FIELD_NAME_URL = "url";
+    private final String FIELD_NAME_PATH = "path";
 
     public CulturalHeritageObjectCodec(CodecRegistry registry) {
     }
@@ -34,7 +34,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
         String name = null;
         String description = null;
         CulturalHeritageObject.CHOType type = null;
-        URL url = null;
+        String path = null;
 
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
@@ -50,12 +50,8 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
                 case FIELD_NAME_TYPE:
                     type = CulturalHeritageObject.CHOType.valueOf(reader.readString());
                     break;
-                case FIELD_NAME_URL:
-                    try {
-                        url = new URL(reader.readString());
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                case FIELD_NAME_PATH:
+                    path = reader.readString();
                     break;
                 default:
                     reader.skipValue();
@@ -63,7 +59,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
             }
         }
         reader.readEndDocument();
-        final CulturalHeritageObject object = new CulturalHeritageObject(id, name, url, type);
+        final CulturalHeritageObject object = new CulturalHeritageObject(id, name, path, type);
         object.description = description;
         return object;
     }
@@ -75,7 +71,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
         writer.writeString(FIELD_NAME_NAME, value.name);
         writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
         writer.writeString(FIELD_NAME_TYPE, value.type.name());
-        writer.writeString(FIELD_NAME_URL, value.path.toString());
+        writer.writeString(FIELD_NAME_PATH, value.path);
         writer.writeEndDocument();
     }
 

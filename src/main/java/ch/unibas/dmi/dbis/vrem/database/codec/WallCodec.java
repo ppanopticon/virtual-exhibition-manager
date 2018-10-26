@@ -53,7 +53,6 @@ public class WallCodec implements Codec<Wall> {
                         exhibits.add(this.exhibitCodec.decode(reader, decoderContext));
                     }
                     reader.readEndArray();
-                    position = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 default:
                     reader.skipValue();
@@ -61,7 +60,13 @@ public class WallCodec implements Codec<Wall> {
             }
         }
         reader.readEndDocument();
-        return new Wall(position, color);
+
+        /* Make final assembly. */
+        final Wall wall = new Wall(position, color);
+        for (Exhibit exhibit : exhibits) {
+            wall.exhibits.add(exhibit);
+        }
+        return wall;
     }
 
     @Override
