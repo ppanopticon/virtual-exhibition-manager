@@ -1,6 +1,5 @@
 package ch.unibas.dmi.dbis.vrem.model.objects;
 
-import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import org.bson.types.ObjectId;
 
 import java.net.URL;
@@ -9,7 +8,7 @@ import java.util.Map;
 
 public class CulturalHeritageObject {
 
-    public final ObjectId id;
+    public final String id;
 
     public final String name;
 
@@ -28,7 +27,7 @@ public class CulturalHeritageObject {
      * @param name
      */
     public CulturalHeritageObject(ObjectId id, String name, URL url, CHOType type) {
-        this.id = id;
+        this.id = id.toHexString();
         this.name = name;
         this.path = url;
         this.type = type;

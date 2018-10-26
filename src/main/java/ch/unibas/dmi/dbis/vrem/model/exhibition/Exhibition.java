@@ -8,14 +8,13 @@ import java.util.List;
 public class Exhibition {
 
 
-    private final ObjectId id;
+    public final String id;
 
-    private final String name;
+    public final String name;
 
-    private final String description;
+    public final String description;
 
-    private final List<Room> rooms = new ArrayList<>();
-
+    public final List<Room> rooms = new ArrayList<>();
 
     /**
      *
@@ -24,7 +23,7 @@ public class Exhibition {
      * @param description
      */
     public Exhibition(ObjectId id, String name, String description) {
-        this.id = id;
+        this.id = id.toString();
         this.name = name;
         this.description = description;
     }
@@ -35,9 +34,7 @@ public class Exhibition {
      * @param description
      */
     public Exhibition(String name, String description) {
-        this.id = new ObjectId();
-        this.name = name;
-        this.description = description;
+        this(new ObjectId(), name, description);
     }
 
     /**

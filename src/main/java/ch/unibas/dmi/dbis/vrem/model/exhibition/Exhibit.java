@@ -13,7 +13,7 @@ public class Exhibit extends CulturalHeritageObject{
 
     /** */
     public Vector3f size = Vector3f.UNIT;
-    
+
     /**
      *
      * @param name
