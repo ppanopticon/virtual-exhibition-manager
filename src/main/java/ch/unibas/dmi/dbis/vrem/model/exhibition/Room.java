@@ -2,9 +2,7 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Room {
 
@@ -17,7 +15,7 @@ public class Room {
     public final Vector3f entrypoint;
 
     /** */
-    private final Map<Direction,Wall> walls = new HashMap<>();
+    private final List<Wall> walls = new ArrayList<>(4);
 
     /** */
     transient Exhibition exhibition;
@@ -38,16 +36,16 @@ public class Room {
 
     /**
      *
-     * @param direction
      * @param wall
      */
-    public boolean placeWall(Direction direction, Wall wall) {
-        if (!this.walls.containsKey(direction) && wall.room == null) {
-            this.walls.put(direction, wall);
+    public boolean placeWall(Wall wall) {
+        boolean contained = this.walls.stream().anyMatch(w -> w.direction == wall.direction);
+        if (wall.room != null || this.walls.size() >= 4 || contained) {
+            return false;
+        } else {
+            this.walls.add(wall);
             wall.room = this;
             return true;
-        } else {
-            return false;
         }
     }
 
@@ -55,7 +53,7 @@ public class Room {
      *
      * @return
      */
-    public Map<Direction,Wall> getWalls() {
-        return Collections.unmodifiableMap(this.walls);
+    public List<Wall> getWalls() {
+        return Collections.unmodifiableList(this.walls);
     }
 }

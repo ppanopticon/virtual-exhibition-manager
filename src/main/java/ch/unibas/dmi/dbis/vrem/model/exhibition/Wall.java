@@ -15,6 +15,9 @@ public class Wall {
     public final Vector3f color;
 
     /** */
+    public final Direction direction;
+
+    /** */
     private final List<Exhibit> exhibits = new ArrayList();
 
     /** */
@@ -24,15 +27,16 @@ public class Wall {
      *
      * @param position
      */
-    public Wall(Vector3f position) {
-        this(position, new Vector3f(0.75f, 0.75f, 0.75f));
+    public Wall(Direction direction, Vector3f position) {
+        this(direction, position, new Vector3f(0.75f, 0.75f, 0.75f));
     }
 
     /**
      *
      * @param position
      */
-    public Wall(Vector3f position, Vector3f color) {
+    public Wall(Direction direction, Vector3f position, Vector3f color) {
+        this.direction = direction;
         this.position = position;
         this.color = color;
     }

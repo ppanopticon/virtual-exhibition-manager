@@ -12,7 +12,9 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RoomCodec implements Codec<Room> {
@@ -50,7 +52,7 @@ public class RoomCodec implements Codec<Room> {
         Vector3f size = null;
         Vector3f position = null;
         Vector3f entrypoint = null;
-        Map<Direction,Wall> walls = new HashMap<>();
+        List<Wall> walls = new ArrayList<>();
 
 
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -68,16 +70,11 @@ public class RoomCodec implements Codec<Room> {
                     entrypoint = this.vectorCodec.decode(reader, decoderContext);
                     break;
                 case FIELD_NAME_WALLS:
-                    reader.readStartDocument();
-                    reader.readName(Direction.NORTH.name().toLowerCase());
-                    walls.put(Direction.NORTH, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName(Direction.EAST.name().toLowerCase());
-                    walls.put(Direction.EAST, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName(Direction.SOUTH.name().toLowerCase());
-                    walls.put(Direction.SOUTH, this.wallCodec.decode(reader, decoderContext));
-                    reader.readName(Direction.WEST.name().toLowerCase());
-                    walls.put(Direction.WEST, this.wallCodec.decode(reader, decoderContext));
-                    reader.readEndDocument();
+                    reader.readStartArray();
+                        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                            walls.add( this.wallCodec.decode(reader, decoderContext));
+                        }
+                    reader.readEndArray();
                     break;
                 default:
                     reader.skipValue();
@@ -86,8 +83,8 @@ public class RoomCodec implements Codec<Room> {
         }
         reader.readEndDocument();
         final Room room = new Room(text, size, position, entrypoint);
-        for (Map.Entry<Direction,Wall> entry : walls.entrySet()) {
-            room.placeWall(entry.getKey(), entry.getValue());
+        for (Wall wall   : walls) {
+            room.placeWall(wall);
         }
         return room;
     }
@@ -104,16 +101,12 @@ public class RoomCodec implements Codec<Room> {
             this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
 
             writer.writeName(FIELD_NAME_WALLS);
-            writer.writeStartDocument();
-                writer.writeName(Direction.NORTH.name());
-                this.wallCodec.encode(writer, value.getWalls().get(Direction.NORTH), encoderContext);
-                writer.writeName(Direction.EAST.name());
-                this.wallCodec.encode(writer, value.getWalls().get(Direction.EAST), encoderContext);
-                writer.writeName(Direction.SOUTH.name());
-                this.wallCodec.encode(writer, value.getWalls().get(Direction.SOUTH), encoderContext);
-                writer.writeName(Direction.WEST.name());
-                this.wallCodec.encode(writer, value.getWalls().get(Direction.WEST), encoderContext);
-            writer.writeEndDocument();
+            writer.writeStartArray();
+                this.wallCodec.encode(writer, value.getWalls().get(0), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(1), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(2), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(3), encoderContext);
+            writer.writeEndArray();
         writer.writeEndDocument();
     }
 
