@@ -3,6 +3,7 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Exhibition {
@@ -14,7 +15,7 @@ public class Exhibition {
 
     public final String description;
 
-    public final List<Room> rooms = new ArrayList<>();
+    private final List<Room> rooms = new ArrayList<>();
 
     /**
      *
@@ -41,9 +42,21 @@ public class Exhibition {
      *
      * @param room
      */
-    public void addRoom(Room room) {
-        if (!this.rooms.contains(room)) {
+    public boolean addRoom(Room room) {
+        if (!this.rooms.contains(room) && room.exhibition == null) {
             this.rooms.add(room);
+            room.exhibition = this;
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Room> getRooms() {
+        return Collections.unmodifiableList(this.rooms);
     }
 }

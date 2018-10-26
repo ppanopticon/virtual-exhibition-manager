@@ -28,7 +28,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
 
     /**
      *
-     * @param codec
+     * @param registry
      */
     public ExhibitionCodec(CodecRegistry registry) {
         this.codec = registry.get(Room.class);
@@ -81,7 +81,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
             writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
             writer.writeName(FIELD_NAME_ROOMS);
             writer.writeStartArray();
-            for (Room room : value.rooms) {
+            for (Room room : value.getRooms()) {
                 this.codec.encode(writer, room, encoderContext);
             }
             writer.writeEndArray();

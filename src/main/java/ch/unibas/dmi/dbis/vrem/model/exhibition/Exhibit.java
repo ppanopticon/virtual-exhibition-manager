@@ -12,6 +12,9 @@ public class Exhibit extends CulturalHeritageObject{
     /** */
     public Vector3f size = Vector3f.UNIT;
 
+    /** */
+    transient Wall wall = null;
+
     /**
      *
      * @param name
@@ -27,4 +30,5 @@ public class Exhibit extends CulturalHeritageObject{
     public Exhibit(String name, String path, CHOType type) {
         super(new ObjectId(), name, path, type);
     }
+
 }

@@ -64,7 +64,7 @@ public class WallCodec implements Codec<Wall> {
         /* Make final assembly. */
         final Wall wall = new Wall(position, color);
         for (Exhibit exhibit : exhibits) {
-            wall.exhibits.add(exhibit);
+            wall.placeExhibit(exhibit);
         }
         return wall;
     }
@@ -78,7 +78,7 @@ public class WallCodec implements Codec<Wall> {
             this.vectorCodec.encode(writer, value.color, encoderContext);
             writer.writeName(FIELD_NAME_EXHIBITS);
             writer.writeStartArray();
-                for (Exhibit exhibit : value.exhibits) {
+                for (Exhibit exhibit : value.getExhibits()) {
                     this.exhibitCodec.encode(writer, exhibit, encoderContext);
                 }
             writer.writeEndArray();

@@ -12,9 +12,6 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 public class ExhibitCodec implements Codec<Exhibit> {
     public final String FIELD_NAME_ID = "_id";
     public final String FIELD_NAME_NAME = "name";

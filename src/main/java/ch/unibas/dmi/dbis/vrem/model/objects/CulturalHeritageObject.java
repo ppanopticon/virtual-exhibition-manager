@@ -15,7 +15,6 @@ public class CulturalHeritageObject {
 
     public final String path;
 
-
     public String description;
 
 

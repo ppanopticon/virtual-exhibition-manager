@@ -3,6 +3,7 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Wall {
@@ -14,7 +15,10 @@ public class Wall {
     public final Vector3f color;
 
     /** */
-    public final List<Exhibit> exhibits = new ArrayList();
+    private final List<Exhibit> exhibits = new ArrayList();
+
+    /** */
+    transient Room room = null;
 
     /**
      *
@@ -31,5 +35,27 @@ public class Wall {
     public Wall(Vector3f position, Vector3f color) {
         this.position = position;
         this.color = color;
+    }
+
+    /**
+     *
+     * @param exhibit
+     */
+    public boolean placeExhibit(Exhibit exhibit) {
+        if (exhibit.wall == null) {
+            this.exhibits.add(exhibit);
+            exhibit.wall = this;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Exhibit> getExhibits() {
+        return Collections.unmodifiableList(this.exhibits);
     }
 }

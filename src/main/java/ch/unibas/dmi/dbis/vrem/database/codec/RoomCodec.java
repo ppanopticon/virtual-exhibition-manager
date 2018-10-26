@@ -86,7 +86,9 @@ public class RoomCodec implements Codec<Room> {
         }
         reader.readEndDocument();
         final Room room = new Room(text, size, position, entrypoint);
-        room.walls.putAll(walls);
+        for (Map.Entry<Direction,Wall> entry : walls.entrySet()) {
+            room.placeWall(entry.getKey(), entry.getValue());
+        }
         return room;
     }
 
@@ -104,13 +106,13 @@ public class RoomCodec implements Codec<Room> {
             writer.writeName(FIELD_NAME_WALLS);
             writer.writeStartDocument();
                 writer.writeName(Direction.NORTH.name());
-                this.wallCodec.encode(writer, value.walls.get(Direction.NORTH), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(Direction.NORTH), encoderContext);
                 writer.writeName(Direction.EAST.name());
-                this.wallCodec.encode(writer, value.walls.get(Direction.EAST), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(Direction.EAST), encoderContext);
                 writer.writeName(Direction.SOUTH.name());
-                this.wallCodec.encode(writer, value.walls.get(Direction.SOUTH), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(Direction.SOUTH), encoderContext);
                 writer.writeName(Direction.WEST.name());
-                this.wallCodec.encode(writer, value.walls.get(Direction.WEST), encoderContext);
+                this.wallCodec.encode(writer, value.getWalls().get(Direction.WEST), encoderContext);
             writer.writeEndDocument();
         writer.writeEndDocument();
     }

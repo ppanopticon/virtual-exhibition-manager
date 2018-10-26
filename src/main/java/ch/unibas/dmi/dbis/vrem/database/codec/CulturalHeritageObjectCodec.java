@@ -1,6 +1,5 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
-import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 
 import org.bson.BsonReader;
@@ -11,9 +10,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject> {
 
