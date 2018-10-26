@@ -5,8 +5,6 @@ import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 
 import org.bson.types.ObjectId;
 
-import java.net.URL;
-
 public class Exhibit extends CulturalHeritageObject{
     /** */
     public Vector3f position = Vector3f.ORIGIN;
@@ -18,15 +16,15 @@ public class Exhibit extends CulturalHeritageObject{
      *
      * @param name
      */
-    public Exhibit(ObjectId id, String name, URL url, CHOType type) {
-        super(id,name,url,type);
+    public Exhibit(ObjectId id, String name, String path, CHOType type) {
+        super(id,name,path,type);
     }
 
     /**
      *
      * @param name
      */
-    public Exhibit(String name, URL url, CHOType type) {
-        super(new ObjectId(), name, url, type);
+    public Exhibit(String name, String path, CHOType type) {
+        super(new ObjectId(), name, path, type);
     }
 }
