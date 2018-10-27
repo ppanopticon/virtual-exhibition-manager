@@ -31,3 +31,27 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+
+jar {
+    manifest {
+        attributes "Version": "$version"
+        attributes "Manifest-Version": "1.0"
+        attributes 'Main-Class': 'ch.unibas.dmi.dbis.vrem.VREM'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task copyResources {
+    doLast {
+        copy {
+            from "config.json"
+            into "$buildDir/libs/"
+        }
+    }
+}
+
+task deploy(dependsOn: [build, jar, copyResources])
