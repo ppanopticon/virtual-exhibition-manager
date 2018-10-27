@@ -2,10 +2,12 @@ package ch.unibas.dmi.dbis.vrem;
 
 import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
-import ch.unibas.dmi.dbis.vrem.handlers.ListExhibitionsHandler;
-import ch.unibas.dmi.dbis.vrem.handlers.LoadExhibitionHandler;
+import ch.unibas.dmi.dbis.vrem.server.WebServer;
+import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.ListExhibitionsHandler;
+import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.LoadExhibitionHandler;
 
-import ch.unibas.dmi.dbis.vrem.handlers.RequestContentHandler;
+import ch.unibas.dmi.dbis.vrem.server.handlers.content.RequestContentHandler;
+import com.github.rvesse.airline.annotations.Cli;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -21,6 +23,7 @@ import java.nio.file.Paths;
 
 import static spark.Spark.*;
 
+@Cli(name = "VREM", description = "Virtual Reality Exhibition Manager", commands = {WebServer.class}, defaultCommand = WebServer.class)
 public class VREM {
     /** */
     private static final String MONGO_HOST = "127.0.0.1";
@@ -39,18 +42,6 @@ public class VREM {
      * @param args
      */
     public static void main(String [] args) {
-        final CodecRegistry registry = CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), CodecRegistries.fromProviders(new VREMCodecProvider()));
-        final ConnectionString connectionString = new ConnectionString(String.format("mongodb://%s:%d", MONGO_HOST, MONGO_PORT));
-        final MongoClientSettings settings = MongoClientSettings.builder().codecRegistry(registry).applyConnectionString(connectionString).applicationName("VREM").build();
-
-        final MongoClient client = MongoClients.create(settings);
-        final MongoDatabase db = client.getDatabase(MONGO_DATABASE);
-        final VREMReader reader = new VREMReader(db);
-
-
-        /* Register routes. */
-        get("/content/get/:path", new RequestContentHandler(DOCUMENT_ROOT));
-        get("/exhibitions/list", new ListExhibitionsHandler(reader));
-        get("/exhibitions/load/:id", new LoadExhibitionHandler(reader));
+        new com.github.rvesse.airline.Cli<Runnable>(VREM.class).parse(args).run();
     }
 }

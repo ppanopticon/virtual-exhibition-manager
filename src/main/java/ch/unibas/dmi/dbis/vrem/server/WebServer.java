@@ -61,7 +61,7 @@ public class WebServer implements Runnable {
             get("/exhibitions/list", new ListExhibitionsHandler(reader));
             get("/exhibitions/load/:id", new LoadExhibitionHandler(reader));
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 }
