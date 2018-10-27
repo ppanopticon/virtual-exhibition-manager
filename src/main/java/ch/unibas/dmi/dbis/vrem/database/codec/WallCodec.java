@@ -21,7 +21,6 @@ public class WallCodec implements Codec<Wall> {
 
     private final String FIELD_NAME_DIRECTION = "direction";
     private final String FIELD_NAME_TEXTURE = "texture";
-    private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_COLOR = "color";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
 
@@ -52,9 +51,6 @@ public class WallCodec implements Codec<Wall> {
                 case FIELD_NAME_TEXTURE:
                     texture = Texture.valueOf(reader.readString());
                     break;
-                case FIELD_NAME_POSITION:
-                    position = this.vectorCodec.decode(reader, decoderContext);
-                    break;
                 case FIELD_NAME_COLOR:
                     color = this.vectorCodec.decode(reader, decoderContext);
                     break;
@@ -75,9 +71,9 @@ public class WallCodec implements Codec<Wall> {
         /* Make final assembly. */
         Wall wall;
         if (texture == Texture.NONE) {
-            wall = new Wall(direction, position, color);
+            wall = new Wall(direction, color);
         } else {
-            wall = new Wall(direction, position, texture);
+            wall = new Wall(direction, texture);
         }
         for (Exhibit exhibit : exhibits) {
             wall.placeExhibit(exhibit);
@@ -90,8 +86,6 @@ public class WallCodec implements Codec<Wall> {
         writer.writeStartDocument();
             writer.writeString(FIELD_NAME_DIRECTION, value.direction.name());
             writer.writeString(FIELD_NAME_TEXTURE, value.texture.name());
-            writer.writeName(FIELD_NAME_POSITION);
-            this.vectorCodec.encode(writer, value.position, encoderContext);
             writer.writeName(FIELD_NAME_COLOR);
             this.vectorCodec.encode(writer, value.color, encoderContext);
             writer.writeName(FIELD_NAME_EXHIBITS);
