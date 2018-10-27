@@ -1,0 +1,11 @@
+{
+  "database" : {
+    "host" : "127.0.0.1",
+    "port" : 27017,
+    "database" : "vrem"
+  },
+  "server" : {
+    "documentRoot" : "/path/to/root",
+    "port" : 4567
+  }
+}
