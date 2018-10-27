@@ -103,10 +103,7 @@ public class RoomCodec implements Codec<Room> {
             }
         }
         reader.readEndDocument();
-        final Room room = new Room(text, floor, ceiling, size, position, entrypoint);
-        for (Wall wall : walls) {
-            room.placeWall(wall);
-        }
+        final Room room = new Room(text, walls, floor, ceiling, size, position, entrypoint);
         for (Exhibit exhibit : exhibits) {
             room.placeExhibit(exhibit);
         }
@@ -127,10 +124,10 @@ public class RoomCodec implements Codec<Room> {
             this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
             writer.writeName(FIELD_NAME_WALLS);
             writer.writeStartArray();
-                this.wallCodec.encode(writer, value.getWalls().get(0), encoderContext);
-                this.wallCodec.encode(writer, value.getWalls().get(1), encoderContext);
-                this.wallCodec.encode(writer, value.getWalls().get(2), encoderContext);
-                this.wallCodec.encode(writer, value.getWalls().get(3), encoderContext);
+                this.wallCodec.encode(writer, value.getNorth(), encoderContext);
+                this.wallCodec.encode(writer, value.getEast(), encoderContext);
+                this.wallCodec.encode(writer, value.getSouth(), encoderContext);
+                this.wallCodec.encode(writer, value.getWest(), encoderContext);
             writer.writeEndArray();
             writer.writeName(FIELD_NAME_EXHIBITS);
             writer.writeStartArray();

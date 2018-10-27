@@ -15,19 +15,22 @@ public class CulturalHeritageObject {
 
     public final String path;
 
-    public String description;
-
+    public final String description;
 
     public final Map<String,String> metadata = new HashMap<>();
 
-
     /**
      *
+     * @param id
      * @param name
+     * @param description
+     * @param path
+     * @param type
      */
-    public CulturalHeritageObject(ObjectId id, String name, String path, CHOType type) {
+    public CulturalHeritageObject(ObjectId id, String name, String description, String path, CHOType type) {
         this.id = id.toHexString();
         this.name = name;
+        this.description = description;
         this.path = path;
         this.type = type;
     }
@@ -35,9 +38,12 @@ public class CulturalHeritageObject {
     /**
      *
      * @param name
+     * @param description
+     * @param path
+     * @param type
      */
-    public CulturalHeritageObject(String name, String path, CHOType type) {
-        this(new ObjectId(), name, path, type);
+    public CulturalHeritageObject(String name, String description, String path, CHOType type) {
+        this(new ObjectId(), name, description, path, type);
     }
 
     /**

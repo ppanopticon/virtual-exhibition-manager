@@ -14,18 +14,51 @@ public class Exhibit extends CulturalHeritageObject{
 
     /**
      *
+     * @param id
      * @param name
+     * @param description
+     * @param path
+     * @param type
      */
-    public Exhibit(ObjectId id, String name, String path, CHOType type) {
-        super(id,name,path,type);
+    public Exhibit(ObjectId id, String name, String description, String path, CHOType type) {
+        super(id,name, description,path,type);
+    }
+
+    /**
+     *
+     * @param id
+     * @param name
+     * @param description
+     * @param path
+     * @param type
+     */
+    public Exhibit(ObjectId id, String name, String description, String path, CHOType type, Vector3f position, Vector3f size) {
+        super(id,name, description,path,type);
+        this.size = size;
+        this.position = position;
     }
 
     /**
      *
      * @param name
+     * @param description
+     * @param path
+     * @param type
      */
-    public Exhibit(String name, String path, CHOType type) {
-        super(new ObjectId(), name, path, type);
+    public Exhibit(String name, String description, String path, CHOType type) {
+        super(new ObjectId(), name, description, path, type);
     }
 
+    /**
+     *
+     * @param name
+     * @param description
+     * @param path
+     * @param type
+     * @param position
+     * @param size
+     */
+    public Exhibit(String name, String description, String path, CHOType type, Vector3f position, Vector3f size) {
+        this(new ObjectId(), name, description, path, type, position, size);
+    }
 }

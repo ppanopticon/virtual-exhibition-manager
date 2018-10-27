@@ -20,8 +20,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
     private final String FIELD_NAME_TYPE = "type";
     private final String FIELD_NAME_PATH = "path";
 
-    public CulturalHeritageObjectCodec(CodecRegistry registry) {
-    }
+    public CulturalHeritageObjectCodec(CodecRegistry registry) { }
 
     @Override
     public CulturalHeritageObject decode(BsonReader reader, DecoderContext decoderContext) {
@@ -55,9 +54,7 @@ public class CulturalHeritageObjectCodec implements Codec<CulturalHeritageObject
             }
         }
         reader.readEndDocument();
-        final CulturalHeritageObject object = new CulturalHeritageObject(id, name, path, type);
-        object.description = description;
-        return object;
+        return new CulturalHeritageObject(id, name, description, path, type);
     }
 
     @Override

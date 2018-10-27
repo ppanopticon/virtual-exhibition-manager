@@ -13,20 +13,14 @@ import org.bson.types.ObjectId;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VREMReader {
-
-
-    private final static String EXHIBITION_COLLECTION = "exhibitions";
-
-
-    private final MongoDatabase database;
+public class VREMReader extends VREMDao {
 
     /**
      *
      * @param database
      */
     public VREMReader(MongoDatabase database) {
-        this.database = database;
+        super(database);
     }
 
     /**
@@ -35,7 +29,7 @@ public class VREMReader {
      * @return
      */
     public Exhibition getExhibition(ObjectId id) {
-        final MongoCollection<Exhibition> exhibitions = database.getCollection(EXHIBITION_COLLECTION, Exhibition.class);
+        final MongoCollection<Exhibition> exhibitions = this.database.getCollection(EXHIBITION_COLLECTION, Exhibition.class);
         return exhibitions.find(Filters.eq("_id",id)).first();
     }
 

@@ -2,6 +2,7 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 
@@ -28,33 +29,21 @@ public class Room {
     /**
      *
      * @param text
+     * @param walls
      * @param floor
      * @param ceiling
      * @param size
      * @param position
      * @param entrypoint
      */
-    public Room(String text, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
+    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.size = size;
         this.text = text;
         this.position = position;
         this.entrypoint = entrypoint;
-    }
-
-    /**
-     *
-     * @param wall
-     */
-    public boolean placeWall(Wall wall) {
-        boolean contained = this.walls.stream().anyMatch(w -> w.direction == wall.direction);
-        if (this.walls.size() >= 4 || contained) {
-            return false;
-        } else {
-            this.walls.add(wall);
-            return true;
-        }
+        this.walls.addAll(walls);
     }
 
     /**
@@ -77,8 +66,32 @@ public class Room {
      *
      * @return
      */
-    public List<Wall> getWalls() {
-        return Collections.unmodifiableList(this.walls);
+    public Wall getNorth() {
+        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Wall getEast() {
+        return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Wall getSouth() {
+        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Wall getWest() {
+        return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
     }
 
     /**

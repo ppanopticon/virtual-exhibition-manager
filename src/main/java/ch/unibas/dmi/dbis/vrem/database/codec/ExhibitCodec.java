@@ -70,11 +70,7 @@ public class ExhibitCodec implements Codec<Exhibit> {
         }
         reader.readEndDocument();
         if (id == null) id = new ObjectId();
-        final Exhibit object = new Exhibit(id, name, path, type);
-        object.description = description;
-        object.position = position;
-        object.size = size;
-        return object;
+        return new Exhibit(id, name, description, path, type, position, size);
     }
 
     @Override
