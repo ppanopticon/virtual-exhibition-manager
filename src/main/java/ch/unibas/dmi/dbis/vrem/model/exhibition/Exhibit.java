@@ -7,10 +7,16 @@ import org.bson.types.ObjectId;
 
 public class Exhibit extends CulturalHeritageObject{
     /** */
-    public Vector3f position = Vector3f.ORIGIN;
+    public final Vector3f position;
 
     /** */
-    public Vector3f size = Vector3f.UNIT;
+    public final Vector3f size ;
+
+    /** */
+    public final String audio;
+
+    /** */
+    public final boolean light;
 
     /**
      *
@@ -21,7 +27,7 @@ public class Exhibit extends CulturalHeritageObject{
      * @param type
      */
     public Exhibit(ObjectId id, String name, String description, String path, CHOType type) {
-        super(id,name, description,path,type);
+        this(id,name, description,path,type, Vector3f.ORIGIN, Vector3f.UNIT, null, false);
     }
 
     /**
@@ -33,9 +39,23 @@ public class Exhibit extends CulturalHeritageObject{
      * @param type
      */
     public Exhibit(ObjectId id, String name, String description, String path, CHOType type, Vector3f position, Vector3f size) {
+        this(id,name, description,path,type, position, size, null, false);
+    }
+
+    /**
+     *
+     * @param id
+     * @param name
+     * @param description
+     * @param path
+     * @param type
+     */
+    public Exhibit(ObjectId id, String name, String description, String path, CHOType type, Vector3f position, Vector3f size, String audio, boolean light) {
         super(id,name, description,path,type);
         this.size = size;
         this.position = position;
+        this.audio = audio;
+        this.light = light;
     }
 
     /**
@@ -46,7 +66,7 @@ public class Exhibit extends CulturalHeritageObject{
      * @param type
      */
     public Exhibit(String name, String description, String path, CHOType type) {
-        super(new ObjectId(), name, description, path, type);
+        this(new ObjectId(), name, description, path, type);
     }
 
     /**
@@ -60,5 +80,19 @@ public class Exhibit extends CulturalHeritageObject{
      */
     public Exhibit(String name, String description, String path, CHOType type, Vector3f position, Vector3f size) {
         this(new ObjectId(), name, description, path, type, position, size);
+    }
+
+
+    /**
+     *
+     * @param name
+     * @param description
+     * @param path
+     * @param type
+     * @param position
+     * @param size
+     */
+    public Exhibit(String name, String description, String path, CHOType type, Vector3f position, Vector3f size, String audio, boolean light) {
+        this(new ObjectId(), name, description, path, type, position, size, audio, light);
     }
 }

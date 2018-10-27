@@ -13,13 +13,14 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 
 public class ExhibitCodec implements Codec<Exhibit> {
-    public final String FIELD_NAME_ID = "_id";
     public final String FIELD_NAME_NAME = "name";
     private final String FIELD_NAME_DESCRIPTION = "description";
     private final String FIELD_NAME_TYPE = "type";
     private final String FIELD_NAME_PATH = "path";
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_SIZE = "size";
+    private final String FIELD_NAME_AUDIO = "audio";
+    private final String FIELD_NAME_LIGHT = "light";
 
 
     private final Codec<Vector3f> codec;
@@ -42,6 +43,8 @@ public class ExhibitCodec implements Codec<Exhibit> {
         String path = null;
         Vector3f position = null;
         Vector3f size = null;
+        String guide = null;
+        boolean light = false;
 
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
@@ -63,6 +66,12 @@ public class ExhibitCodec implements Codec<Exhibit> {
                 case FIELD_NAME_SIZE:
                     size = this.codec.decode(reader, decoderContext);
                     break;
+                case FIELD_NAME_AUDIO:
+                    guide = reader.readString();
+                    break;
+                case FIELD_NAME_LIGHT:
+                    light = reader.readBoolean();
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -70,7 +79,7 @@ public class ExhibitCodec implements Codec<Exhibit> {
         }
         reader.readEndDocument();
         if (id == null) id = new ObjectId();
-        return new Exhibit(id, name, description, path, type, position, size);
+        return new Exhibit(id, name, description, path, type, position, size, guide, light);
     }
 
     @Override
@@ -79,11 +88,15 @@ public class ExhibitCodec implements Codec<Exhibit> {
         writer.writeString(FIELD_NAME_NAME, value.name);
         writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
         writer.writeString(FIELD_NAME_TYPE, value.type.name());
-        writer.writeString(FIELD_NAME_PATH, value.path.toString());
+        writer.writeString(FIELD_NAME_PATH, value.path);
         writer.writeName(FIELD_NAME_POSITION);
         this.codec.encode(writer, value.position, encoderContext);
         writer.writeName(FIELD_NAME_SIZE);
         this.codec.encode(writer, value.size, encoderContext);
+        if (value.audio != null) {
+            writer.writeString(FIELD_NAME_AUDIO, value.audio);
+        }
+        writer.writeBoolean(FIELD_NAME_LIGHT, value.light);
         writer.writeEndDocument();
     }
 
