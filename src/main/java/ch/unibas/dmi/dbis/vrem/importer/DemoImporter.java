@@ -225,7 +225,7 @@ public class DemoImporter implements Runnable {
         /* Case 1: 'Blattmass' found. */
         if (entry != null) {
             final String[] components = entry.split(" x ");
-            return new Vector3f(Float.parseFloat(components[0])/100.0f,  Float.parseFloat(components[1])/100.0f, 0.0f);
+            return new Vector3f(Float.parseFloat(components[1])/100.0f, Float.parseFloat(components[0])/100.0f, 0.0f);
         }
 
 
