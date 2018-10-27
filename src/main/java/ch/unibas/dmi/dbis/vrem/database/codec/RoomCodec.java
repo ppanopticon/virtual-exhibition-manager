@@ -1,6 +1,7 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
@@ -24,7 +25,9 @@ public class RoomCodec implements Codec<Room> {
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
     private final String FIELD_NAME_WALLS = "walls";
+    private final String FIELD_NAME_EXHIBITS = "exhibits";
 
+    private final Codec<Exhibit> exhibitCodec;
 
     private final Codec<Wall> wallCodec;
 
@@ -35,6 +38,7 @@ public class RoomCodec implements Codec<Room> {
      * @param registry
      */
     public RoomCodec(CodecRegistry registry) {
+        this.exhibitCodec = registry.get(Exhibit.class);
         this.wallCodec = registry.get(Wall.class);
         this.vectorCodec = registry.get(Vector3f.class);
     }
@@ -54,6 +58,7 @@ public class RoomCodec implements Codec<Room> {
         Vector3f position = null;
         Vector3f entrypoint = null;
         List<Wall> walls = new ArrayList<>();
+        List<Exhibit> exhibits = new ArrayList<>();
 
 
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -80,6 +85,13 @@ public class RoomCodec implements Codec<Room> {
                         }
                     reader.readEndArray();
                     break;
+                case FIELD_NAME_EXHIBITS:
+                    reader.readStartArray();
+                    while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                        exhibits.add(this.exhibitCodec.decode(reader, decoderContext));
+                    }
+                    reader.readEndArray();
+                    break;
                 default:
                     reader.skipValue();
                     break;
@@ -87,8 +99,11 @@ public class RoomCodec implements Codec<Room> {
         }
         reader.readEndDocument();
         final Room room = new Room(text, floor, size, position, entrypoint);
-        for (Wall wall   : walls) {
+        for (Wall wall : walls) {
             room.placeWall(wall);
+        }
+        for (Exhibit exhibit : exhibits) {
+            room.placeExhibit(exhibit);
         }
         return room;
     }
@@ -110,6 +125,12 @@ public class RoomCodec implements Codec<Room> {
                 this.wallCodec.encode(writer, value.getWalls().get(1), encoderContext);
                 this.wallCodec.encode(writer, value.getWalls().get(2), encoderContext);
                 this.wallCodec.encode(writer, value.getWalls().get(3), encoderContext);
+            writer.writeEndArray();
+            writer.writeName(FIELD_NAME_EXHIBITS);
+            writer.writeStartArray();
+                for (Exhibit exhibit : value.getExhibits()) {
+                    this.exhibitCodec.encode(writer, exhibit, encoderContext);
+                }
             writer.writeEndArray();
         writer.writeEndDocument();
     }

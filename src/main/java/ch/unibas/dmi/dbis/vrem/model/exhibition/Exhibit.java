@@ -12,9 +12,6 @@ public class Exhibit extends CulturalHeritageObject{
     /** */
     public Vector3f size = Vector3f.UNIT;
 
-    /** */
-    transient Wall wall = null;
-
     /**
      *
      * @param name

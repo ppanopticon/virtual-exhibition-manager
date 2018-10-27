@@ -1,6 +1,7 @@
 package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 
 import java.util.*;
 
@@ -16,11 +17,11 @@ public class Room {
 
     public final Vector3f entrypoint;
 
-    /** */
+    /** List of walls (4 max). */
     private final List<Wall> walls = new ArrayList<>(4);
 
-    /** */
-    transient Exhibition exhibition;
+    /** List of exhibits (only 3D models valid). */
+    private final List<Exhibit> exhibits = new ArrayList<>();
 
     /**
      *
@@ -44,13 +45,28 @@ public class Room {
      */
     public boolean placeWall(Wall wall) {
         boolean contained = this.walls.stream().anyMatch(w -> w.direction == wall.direction);
-        if (wall.room != null || this.walls.size() >= 4 || contained) {
+        if (this.walls.size() >= 4 || contained) {
             return false;
         } else {
             this.walls.add(wall);
-            wall.room = this;
             return true;
         }
+    }
+
+    /**
+     *
+     * @param exhibit
+     * @return
+     */
+    public boolean placeExhibit(Exhibit exhibit) {
+        if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
+            throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
+        }
+        if (!this.exhibits.contains(exhibit)) {
+            this.exhibits.add(exhibit);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -59,5 +75,13 @@ public class Room {
      */
     public List<Wall> getWalls() {
         return Collections.unmodifiableList(this.walls);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Exhibit> getExhibits() {
+        return Collections.unmodifiableList(this.exhibits);
     }
 }

@@ -5,6 +5,8 @@
   "rooms" : [
     {
       "text" : "Room #1",
+      "floor" : "WOOD",
+      "exhibits" : [],
       "position" : {
         "x" : 0.0,
         "y" : 0.0,

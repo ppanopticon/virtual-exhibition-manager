@@ -19,9 +19,6 @@ public class Wall {
     /** */
     private final List<Exhibit> exhibits = new ArrayList<>();
 
-    /** */
-    transient Room room = null;
-
     /**
      *
      * @param direction
@@ -49,9 +46,8 @@ public class Wall {
      * @param exhibit
      */
     public boolean placeExhibit(Exhibit exhibit) {
-        if (exhibit.wall == null) {
+        if (!this.exhibits.contains(exhibit)) {
             this.exhibits.add(exhibit);
-            exhibit.wall = this;
             return true;
         } else {
             return false;
