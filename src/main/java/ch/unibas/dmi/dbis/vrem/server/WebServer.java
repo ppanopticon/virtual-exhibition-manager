@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.port;
 
@@ -60,6 +61,12 @@ public class WebServer implements Runnable {
             get("/content/get/:path", new RequestContentHandler(docRoot));
             get("/exhibitions/list", new ListExhibitionsHandler(reader));
             get("/exhibitions/load/:id", new LoadExhibitionHandler(reader));
+
+            /* Configure the result after processing was completed. */
+            after((request, response) -> {
+                response.header("Access-Control-Allow-Origin", "*");
+                response.header("Access-Control-Allow-Headers", "*");
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
