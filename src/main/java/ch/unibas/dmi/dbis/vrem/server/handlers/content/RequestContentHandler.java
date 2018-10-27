@@ -49,21 +49,16 @@ public class RequestContentHandler implements Route {
             return 404;
         }
 
-
-
         /* Prepare response. */
         response.type(Files.probeContentType(absolute));
         response.header("Transfer-Encoding", "identity");
-
-        final InputStream in = Files.newInputStream(absolute, StandardOpenOption.READ);
-        final OutputStream out = response.raw().getOutputStream();
-
-        final ReadableByteChannel inputChannel = Channels.newChannel(in);
-        final WritableByteChannel outputChannel = Channels.newChannel(out);
-
-        fastCopy(inputChannel, outputChannel);
-
-        out.flush();
+        /* Transfer data. */
+        try (final InputStream in =  Files.newInputStream(absolute, StandardOpenOption.READ);
+             final OutputStream out = response.raw().getOutputStream()) {
+            int length = fastCopy(in, out);
+            response.header("Content-Length", String.valueOf(length));
+            out.flush();
+        }
 
         return null;
     }
@@ -74,20 +69,15 @@ public class RequestContentHandler implements Route {
      * @param dest
      * @throws IOException
      */
-    public static void fastCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {
-        final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
-
-        while(src.read(buffer) != -1) {
-            buffer.flip();
-            dest.write(buffer);
-            buffer.compact();
+    public static int fastCopy(final InputStream src, final OutputStream dest) throws IOException {
+        byte[] buffer = new byte[1024]; // Adjust if you want
+        int bytesRead = 0;
+        int totalBytesRead = 0;
+        while ((bytesRead = src.read(buffer)) != -1)
+        {
+            dest.write(buffer, 0, bytesRead);
+            totalBytesRead += bytesRead;
         }
-
-        buffer.flip();
-
-        while(buffer.hasRemaining()) {
-            dest.write(buffer);
-        }
-
+        return totalBytesRead;
     }
 }
