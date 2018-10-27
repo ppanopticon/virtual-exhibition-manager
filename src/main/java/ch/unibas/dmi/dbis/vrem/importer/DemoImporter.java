@@ -15,6 +15,11 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
@@ -35,6 +40,9 @@ import java.util.List;
 public class DemoImporter implements Runnable {
 
 
+
+    public static final Logger LOGGER = LogManager.getLogger();
+
     public static final String FIELD_NAME_IMAGE = "\uFEFFBildcode";
     public static final String FIELD_NAME_OBJECT_NUMBER = "Inventarnummer";
     public static final String FIELD_NAME_ROOM = "Raum";
@@ -46,15 +54,10 @@ public class DemoImporter implements Runnable {
 
     public static final String FIELD_NAME_STYLE = "Gattung";
     public static final String FIELD_NAME_MATERIAL_TECHNIK = "Material_Technik";
-
-    public static final String FIELD_NAME_DESCRIPTION = "Wand";
-
     public static final String FIELD_NAME_MASSANGABEN = "Massangaben";
-
 
     public static final String FIELD_NAME_X = "X";
     public static final String FIELD_NAME_Y = "Y";
-
 
     public static final int MAX_WIDTH = 1280;
     public static final int MAX_HEIGHT = 1280;
@@ -107,12 +110,11 @@ public class DemoImporter implements Runnable {
                 HashMap<String, String> next;
                 while ((next = reader.readNextWithHeader()) != null) {
                     if (next.get(FIELD_NAME_ROOM).equals("1")) {
-                        final String title = next.get(FIELD_NAME_TITLE);
-                        final String description = String.format("Object number: %s\nArtist: %s", next.get(FIELD_NAME_OBJECT_NUMBER), next.get(FIELD_NAME_ARTIST));
+                        final String title = String.format("%s (%s)", next.get(FIELD_NAME_TITLE), next.get(FIELD_NAME_X));
+                        final String description = String.format("Object number: %s\nArtist: %s\nStyle: %s", next.get(FIELD_NAME_OBJECT_NUMBER), next.get(FIELD_NAME_ARTIST), next.get(FIELD_NAME_STYLE));
 
                         final String destPath = String.format("%s/%d/%s/%s", exhibition.id, 1, next.get(FIELD_NAME_WALL), next.get(FIELD_NAME_IMAGE));
-                        final String srcPath = String.format("images/%d/%s/%s", 1, next.get(FIELD_NAME_WALL), next.get(FIELD_NAME_IMAGE));
-
+                        final String srcPath = String.format("%s/images/%s", next.get(FIELD_NAME_WALL), next.get(FIELD_NAME_IMAGE));
 
                         /* Resize and move the images. */
                         final Path imgSrcAbsPath = exhibitionFile.getParent().resolve(srcPath);
@@ -120,19 +122,19 @@ public class DemoImporter implements Runnable {
                         this.scaleAndCopy(imgSrcAbsPath, imgDestAbsPath);
 
                         final Vector3f size = this.parseSize(next.get(FIELD_NAME_MASSANGABEN));
-                        final Vector3f position = new Vector3f(Float.parseFloat(next.get(FIELD_NAME_X)), Float.parseFloat(next.get(FIELD_NAME_Y)), 0.0f);
+                        final Vector3f position = new Vector3f(Float.parseFloat(next.get(FIELD_NAME_X))/10.0f, Float.parseFloat(next.get(FIELD_NAME_Y))/10.0f, 0.0f);
                         switch (next.get(FIELD_NAME_WALL)) {
                             case "N":
                                 room1.getNorth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
                                 break;
                             case "E":
-                                room1.getEast().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE));
+                                room1.getEast().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
                                 break;
                             case "S":
-                                room1.getSouth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE));
+                                room1.getSouth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
                                 break;
                             case "W":
-                                room1.getWest().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE));
+                                room1.getWest().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
                                 break;
                         }
                     }
@@ -158,7 +160,15 @@ public class DemoImporter implements Runnable {
      * @throws IOException
      */
     public void scaleAndCopy(Path src, Path dst) throws IOException {
-        final BufferedImage original = ImageIO.read(src.toFile());
+        final BufferedImage original;
+        try {
+            original = ImageIO.read(src.toFile());
+        } catch (IOException e) {
+            LOGGER.log(Level.ERROR, "Could not read image {} due to an exception: {}", src, e);
+            return;
+        }
+
+
         final BufferedImage scaled = this.resize(original, MAX_WIDTH, MAX_HEIGHT);
 
         /* Create folders if missing. */
@@ -205,7 +215,6 @@ public class DemoImporter implements Runnable {
         final String[] entries = size.split("; ");
 
         String entry = null;
-        boolean found = false;
         for (String s : entries) {
             if (s.startsWith("Blattgrösse: ")) {
                 entry = s.replace("Blattgrösse: ","");
@@ -216,7 +225,7 @@ public class DemoImporter implements Runnable {
         /* Case 1: 'Blattmass' found. */
         if (entry != null) {
             final String[] components = entry.split(" x ");
-            return new Vector3f(Float.parseFloat(components[0]), Float.parseFloat(components[1]), 0.0f);
+            return new Vector3f(Float.parseFloat(components[0])/100.0f,  Float.parseFloat(components[0])/100.0f, 0.0f);
         }
 
 
@@ -229,7 +238,7 @@ public class DemoImporter implements Runnable {
         }
         if (entry != null) {
             final String[] components = entry.split(" x ");
-            return new Vector3f(Float.parseFloat(components[0]), Float.parseFloat(components[0]), 0.0f);
+            return new Vector3f(Float.parseFloat(components[0])/100.0f, Float.parseFloat(components[0])/100.0f, 0.0f);
         }
 
         return Vector3f.ORIGIN;
