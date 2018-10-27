@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Wall {
-
     /** */
     public final Vector3f position;
 
@@ -15,10 +14,13 @@ public class Wall {
     public final Vector3f color;
 
     /** */
+    public final Texture texture;
+
+    /** */
     public final Direction direction;
 
     /** */
-    private final List<Exhibit> exhibits = new ArrayList();
+    private final List<Exhibit> exhibits = new ArrayList<>();
 
     /** */
     transient Room room = null;
@@ -39,6 +41,18 @@ public class Wall {
         this.direction = direction;
         this.position = position;
         this.color = color;
+        this.texture = Texture.NONE;
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public Wall(Direction direction, Vector3f position, Texture texture) {
+        this.direction = direction;
+        this.position = position;
+        this.color = Vector3f.UNIT;
+        this.texture = texture;
     }
 
     /**

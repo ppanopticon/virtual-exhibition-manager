@@ -1,9 +1,10 @@
 package ch.unibas.dmi.dbis.vrem.database.codec;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
+
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -13,13 +14,12 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RoomCodec implements Codec<Room> {
 
     private final String FIELD_NAME_TEXT = "text";
+    private final String FIELD_NAME_FLOOR = "floor";
     private final String FIELD_NAME_SIZE = "size";
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
@@ -49,6 +49,7 @@ public class RoomCodec implements Codec<Room> {
     public Room decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
         String text = null;
+        Texture floor = null;
         Vector3f size = null;
         Vector3f position = null;
         Vector3f entrypoint = null;
@@ -59,6 +60,9 @@ public class RoomCodec implements Codec<Room> {
             switch (reader.readName()) {
                 case FIELD_NAME_TEXT:
                     text = reader.readString();
+                    break;
+                case FIELD_NAME_FLOOR:
+                    floor = Texture.valueOf(reader.readString());
                     break;
                 case FIELD_NAME_SIZE:
                     size = this.vectorCodec.decode(reader, decoderContext);
@@ -82,7 +86,7 @@ public class RoomCodec implements Codec<Room> {
             }
         }
         reader.readEndDocument();
-        final Room room = new Room(text, size, position, entrypoint);
+        final Room room = new Room(text, floor, size, position, entrypoint);
         for (Wall wall   : walls) {
             room.placeWall(wall);
         }
@@ -93,13 +97,13 @@ public class RoomCodec implements Codec<Room> {
     public void encode(BsonWriter writer, Room value, EncoderContext encoderContext) {
         writer.writeStartDocument();
             writer.writeString(FIELD_NAME_TEXT, value.text);
+            writer.writeString(FIELD_NAME_FLOOR, value.floor.name());
             writer.writeName(FIELD_NAME_SIZE);
             this.vectorCodec.encode(writer, value.size, encoderContext);
             writer.writeName(FIELD_NAME_POSITION);
             this.vectorCodec.encode(writer, value.position, encoderContext);
             writer.writeName(FIELD_NAME_ENTRYPOINT);
             this.vectorCodec.encode(writer, value.entrypoint, encoderContext);
-
             writer.writeName(FIELD_NAME_WALLS);
             writer.writeStartArray();
                 this.wallCodec.encode(writer, value.getWalls().get(0), encoderContext);

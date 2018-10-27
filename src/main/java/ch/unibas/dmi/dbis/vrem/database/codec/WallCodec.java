@@ -3,6 +3,7 @@ package ch.unibas.dmi.dbis.vrem.database.codec;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
 
 import org.bson.BsonReader;
@@ -19,6 +20,7 @@ import java.util.List;
 public class WallCodec implements Codec<Wall> {
 
     private final String FIELD_NAME_DIRECTION = "direction";
+    private final String FIELD_NAME_TEXTURE = "texture";
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_COLOR = "color";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
@@ -37,6 +39,7 @@ public class WallCodec implements Codec<Wall> {
     @Override
     public Wall decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
+        Texture texture = null;
         Direction direction = null;
         Vector3f position = null;
         Vector3f color = null;
@@ -45,6 +48,9 @@ public class WallCodec implements Codec<Wall> {
             switch (reader.readName()) {
                 case FIELD_NAME_DIRECTION:
                     direction = Direction.valueOf(reader.readString());
+                    break;
+                case FIELD_NAME_TEXTURE:
+                    texture = Texture.valueOf(reader.readString());
                     break;
                 case FIELD_NAME_POSITION:
                     position = this.vectorCodec.decode(reader, decoderContext);
@@ -67,7 +73,12 @@ public class WallCodec implements Codec<Wall> {
         reader.readEndDocument();
 
         /* Make final assembly. */
-        final Wall wall = new Wall(direction, position, color);
+        Wall wall;
+        if (texture == Texture.NONE) {
+            wall = new Wall(direction, position, color);
+        } else {
+            wall = new Wall(direction, position, texture);
+        }
         for (Exhibit exhibit : exhibits) {
             wall.placeExhibit(exhibit);
         }
@@ -78,6 +89,7 @@ public class WallCodec implements Codec<Wall> {
     public void encode(BsonWriter writer, Wall value, EncoderContext encoderContext) {
         writer.writeStartDocument();
             writer.writeString(FIELD_NAME_DIRECTION, value.direction.name());
+            writer.writeString(FIELD_NAME_TEXTURE, value.texture.name());
             writer.writeName(FIELD_NAME_POSITION);
             this.vectorCodec.encode(writer, value.position, encoderContext);
             writer.writeName(FIELD_NAME_COLOR);

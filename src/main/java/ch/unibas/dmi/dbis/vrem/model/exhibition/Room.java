@@ -8,6 +8,8 @@ public class Room {
 
     public final String text;
 
+    public final Texture floor;
+
     public final Vector3f size;
 
     public final Vector3f position;
@@ -23,11 +25,13 @@ public class Room {
     /**
      *
      * @param text
+     * @param floor
      * @param size
      * @param position
      * @param entrypoint
      */
-    public Room(String text, Vector3f size, Vector3f position, Vector3f entrypoint) {
+    public Room(String text, Texture floor, Vector3f size, Vector3f position, Vector3f entrypoint) {
+        this.floor = floor;
         this.size = size;
         this.text = text;
         this.position = position;
