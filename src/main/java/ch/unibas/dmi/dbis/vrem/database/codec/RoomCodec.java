@@ -21,6 +21,7 @@ public class RoomCodec implements Codec<Room> {
 
     private final String FIELD_NAME_TEXT = "text";
     private final String FIELD_NAME_FLOOR = "floor";
+    private final String FIELD_NAME_CEILING= "ceiling";
     private final String FIELD_NAME_SIZE = "size";
     private final String FIELD_NAME_POSITION = "position";
     private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
@@ -53,7 +54,8 @@ public class RoomCodec implements Codec<Room> {
     public Room decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
         String text = null;
-        Texture floor = null;
+        Texture floor = Texture.WOOD;
+        Texture ceiling = Texture.CONCRETE;
         Vector3f size = null;
         Vector3f position = null;
         Vector3f entrypoint = null;
@@ -68,6 +70,9 @@ public class RoomCodec implements Codec<Room> {
                     break;
                 case FIELD_NAME_FLOOR:
                     floor = Texture.valueOf(reader.readString());
+                    break;
+                case FIELD_NAME_CEILING:
+                    ceiling = Texture.valueOf(reader.readString());
                     break;
                 case FIELD_NAME_SIZE:
                     size = this.vectorCodec.decode(reader, decoderContext);
@@ -98,7 +103,7 @@ public class RoomCodec implements Codec<Room> {
             }
         }
         reader.readEndDocument();
-        final Room room = new Room(text, floor, size, position, entrypoint);
+        final Room room = new Room(text, floor, ceiling, size, position, entrypoint);
         for (Wall wall : walls) {
             room.placeWall(wall);
         }
@@ -113,6 +118,7 @@ public class RoomCodec implements Codec<Room> {
         writer.writeStartDocument();
             writer.writeString(FIELD_NAME_TEXT, value.text);
             writer.writeString(FIELD_NAME_FLOOR, value.floor.name());
+            writer.writeString(FIELD_NAME_CEILING, value.ceiling.name());
             writer.writeName(FIELD_NAME_SIZE);
             this.vectorCodec.encode(writer, value.size, encoderContext);
             writer.writeName(FIELD_NAME_POSITION);

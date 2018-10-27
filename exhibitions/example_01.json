@@ -6,6 +6,7 @@
     {
       "text" : "Room #1",
       "floor" : "WOOD",
+      "ceiling": "CONCRETE",
       "exhibits" : [],
       "position" : {
         "x" : 0.0,
@@ -38,8 +39,8 @@
               "path" : "5bd3292c64aa33a460bcdade/1/N/D_001128.jpg",
               "type" : "IMAGE",
               "size" : {
-                "x" : 1.000,
-                "y" : 0.775,
+                "x" : 2.000,
+                "y" : 1.55,
                 "z" : 1.0
               },
               "position" : {
@@ -65,8 +66,8 @@
               "path" : "5bd3292c64aa33a460bcdade/1/E/2007_0570_04.jpg",
               "type" : "IMAGE",
               "size" : {
-                "x" : 1.256,
-                "y" : 1.0,
+                "x" : 2.512,
+                "y" : 2.0,
                 "z" : 1.0
               },
               "position" : {
@@ -92,8 +93,8 @@
               "path" : "5bd3292c64aa33a460bcdade/1/S/D_001258.jpg",
               "type" : "IMAGE",
               "size" : {
-                "x" : 0.784,
-                "y" : 1.0,
+                "x" : 1.568,
+                "y" : 2.0,
                 "z" : 1.0
               },
               "position" : {
