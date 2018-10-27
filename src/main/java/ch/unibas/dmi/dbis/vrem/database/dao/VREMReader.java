@@ -2,6 +2,7 @@ package ch.unibas.dmi.dbis.vrem.database.dao;
 
 import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
 
+import ch.unibas.dmi.dbis.vrem.model.exhibition.ExhibitionSummary;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -10,8 +11,8 @@ import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VREMReader extends VREMDao {
 
@@ -37,13 +38,13 @@ public class VREMReader extends VREMDao {
      *
      * @return
      */
-    public Map<String,String> listExhibitions() {
+    public List<ExhibitionSummary> listExhibitions() {
         final MongoCollection<Document> exhibitions = database.getCollection(EXHIBITION_COLLECTION);
-        final Map<String,String> map = new HashMap<>();
+        final List<ExhibitionSummary> list = new ArrayList<>();
         for (Document document : exhibitions.find().projection(Projections.include("_id", "name"))) {
-            map.put(document.getObjectId("_id").toString(), document.getString("name"));
+            list.add(new ExhibitionSummary(document.getObjectId("_id"), document.getString("name")));
         }
-        return map;
+        return list;
     }
 }
 

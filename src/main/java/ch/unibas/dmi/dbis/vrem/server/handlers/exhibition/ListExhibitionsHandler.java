@@ -4,9 +4,10 @@ import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.server.handlers.basic.ParsingActionHandler;
 import ch.unibas.dmi.dbis.vrem.server.handlers.basic.ActionHandlerException;
 
+import java.util.List;
 import java.util.Map;
 
-public class ListExhibitionsHandler extends ParsingActionHandler<Map> {
+public class ListExhibitionsHandler extends ParsingActionHandler<List> {
 
 
 
@@ -27,7 +28,7 @@ public class ListExhibitionsHandler extends ParsingActionHandler<Map> {
     }
 
     @Override
-    public Class<Map> inClass() {
-        return Map.class;
+    public Class<List> inClass() {
+        return List.class;
     }
 }
