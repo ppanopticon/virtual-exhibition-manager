@@ -6,5 +6,6 @@ public enum Texture {
     WALLPAPER,
     BRICKS,
     STARS,
+    CONCRETE,
     RED
 }

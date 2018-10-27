@@ -8,9 +8,6 @@ import java.util.List;
 
 public class Wall {
     /** */
-    public final Vector3f position;
-
-    /** */
     public final Vector3f color;
 
     /** */
@@ -27,30 +24,22 @@ public class Wall {
 
     /**
      *
-     * @param position
+     * @param direction
+     * @param color
      */
-    public Wall(Direction direction, Vector3f position) {
-        this(direction, position, new Vector3f(0.75f, 0.75f, 0.75f));
-    }
-
-    /**
-     *
-     * @param position
-     */
-    public Wall(Direction direction, Vector3f position, Vector3f color) {
+    public Wall(Direction direction, Vector3f color) {
         this.direction = direction;
-        this.position = position;
         this.color = color;
         this.texture = Texture.NONE;
     }
 
     /**
      *
-     * @param position
+     * @param direction
+     * @param texture
      */
-    public Wall(Direction direction, Vector3f position, Texture texture) {
+    public Wall(Direction direction, Texture texture) {
         this.direction = direction;
-        this.position = position;
         this.color = Vector3f.UNIT;
         this.texture = texture;
     }
