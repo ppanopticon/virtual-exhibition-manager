@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="CoreConfig" status="INFO">
+  <Properties>
+    <Property name="loggingPattern">[%d{HH:mm:ss.SSS}][%-5level][%t] %C{1} - %msg%n</Property>
+  </Properties>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${loggingPattern}"/>
+    </Console>
+    <RollingFile name="File">
+      <FileName>logs/core.log</FileName>
+      <FilePattern>logs/%d{yyyy-MM-dd-hh}-%i.log.zip</FilePattern>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="3000 KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5" />
+      <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger name="ch.unibas.dmi.dbis.pythia" level="DEBUG" additivity="true"/>
+    <Logger name="ch.unibas.dmi.dbis.fnd.core" level="DEBUG" additivity="true"/>
+    <Root level="WARN">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+</Configuration>
