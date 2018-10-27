@@ -127,16 +127,16 @@ public class DemoImporter implements Runnable {
                         final Vector3f position = new Vector3f(Float.parseFloat(next.get(FIELD_NAME_X))/10.0f, Float.parseFloat(next.get(FIELD_NAME_Y))/10.0f, 0.0f);
                         switch (next.get(FIELD_NAME_WALL)) {
                             case "N":
-                                room1.getNorth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
+                                room1.getNorth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size, null, true));
                                 break;
                             case "E":
-                                room1.getEast().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
+                                room1.getEast().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size, null, true));
                                 break;
                             case "S":
-                                room1.getSouth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
+                                room1.getSouth().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size, null, true));
                                 break;
                             case "W":
-                                room1.getWest().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size));
+                                room1.getWest().placeExhibit(new Exhibit(title, description, destPath, CulturalHeritageObject.CHOType.IMAGE, position, size, null, true));
                                 break;
                         }
                     }
