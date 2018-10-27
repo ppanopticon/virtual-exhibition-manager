@@ -27,6 +27,7 @@ public class RoomCodec implements Codec<Room> {
     private final String FIELD_NAME_ENTRYPOINT = "entrypoint";
     private final String FIELD_NAME_WALLS = "walls";
     private final String FIELD_NAME_EXHIBITS = "exhibits";
+    private final String FIELD_NAME_AMBIENT = "ambient";
 
     private final Codec<Exhibit> exhibitCodec;
 
@@ -61,7 +62,7 @@ public class RoomCodec implements Codec<Room> {
         Vector3f entrypoint = null;
         List<Wall> walls = new ArrayList<>();
         List<Exhibit> exhibits = new ArrayList<>();
-
+        String ambient = null;
 
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
@@ -97,13 +98,16 @@ public class RoomCodec implements Codec<Room> {
                     }
                     reader.readEndArray();
                     break;
+                case FIELD_NAME_AMBIENT:
+                    ambient = reader.readString();
+                    break;
                 default:
                     reader.skipValue();
                     break;
             }
         }
         reader.readEndDocument();
-        final Room room = new Room(text, walls, floor, ceiling, size, position, entrypoint);
+        final Room room = new Room(text, walls, floor, ceiling, size, position, entrypoint, ambient);
         for (Exhibit exhibit : exhibits) {
             room.placeExhibit(exhibit);
         }
@@ -135,6 +139,9 @@ public class RoomCodec implements Codec<Room> {
                     this.exhibitCodec.encode(writer, exhibit, encoderContext);
                 }
             writer.writeEndArray();
+            if (value.ambient != null) {
+                writer.writeString(FIELD_NAME_AMBIENT, value.ambient);
+            }
         writer.writeEndDocument();
     }
 

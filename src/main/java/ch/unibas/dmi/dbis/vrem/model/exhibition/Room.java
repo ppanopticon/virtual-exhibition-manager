@@ -19,6 +19,10 @@ public class Room {
 
     public final Vector3f entrypoint;
 
+
+    public final String ambient;
+
+
     /** List of walls (4 max). */
     private final List<Wall> walls = new ArrayList<>(4);
 
@@ -36,6 +40,20 @@ public class Room {
      * @param entrypoint
      */
     public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
+        this(text, walls, floor, ceiling, size, position, entrypoint, null);
+    }
+
+    /**
+     *
+     * @param text
+     * @param walls
+     * @param floor
+     * @param ceiling
+     * @param size
+     * @param position
+     * @param entrypoint
+     */
+    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.size = size;
@@ -43,6 +61,7 @@ public class Room {
         this.position = position;
         this.entrypoint = entrypoint;
         this.walls.addAll(walls);
+        this.ambient = ambient;
     }
 
     /**
