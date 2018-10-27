@@ -1,0 +1,118 @@
+{
+  "_id" : ObjectId("5bd3292c64aa33a460bcdade"),
+  "name" : "Test Exhibition",
+  "description" : "Test Description",
+  "rooms" : [
+    {
+      "text" : "Room #1",
+      "position" : {
+        "x" : 0.0,
+        "y" : 0.0,
+        "z" : 0.0
+      },
+      "entrypoint" : {
+        "x" : 5.0,
+        "y" : 5.0,
+        "z" : 5.0
+      },
+      "size" : {
+        "x" : 10.0,
+        "y" : 10.0,
+        "z" : 10.0
+      },
+      "walls" : [
+        {
+          "direction" : "NORTH",
+          "color" : {
+            "x" : 0.70,
+            "y" : 0.70,
+            "z" : 0.70
+          },
+          "texture":"NONE",
+          "exhibits" : [
+            {
+              "name" : "Rembrandt 01",
+              "description" : "Lorem ipsum dolor sit amet",
+              "path" : "5bd3292c64aa33a460bcdade/1/N/D_001128.jpg",
+              "type" : "IMAGE",
+              "size" : {
+                "x" : 1.0,
+                "y" : 1.0,
+                "z" : 1.0
+              },
+              "position" : {
+                "x" : 5.0,
+                "y" : 5.0,
+                "z" : 0.0
+              }
+            }
+          ]
+        },
+        {
+          "direction" : "EAST",
+          "color" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "texture":"BRICKS",
+          "exhibits" : [
+            {
+              "name" : "Bodies In The Air",
+              "description" : "Lorem ipsum dolor sit amet",
+              "path" : "5bd3292c64aa33a460bcdade/1/E/2007_0570_04.jpg",
+              "type" : "IMAGE",
+              "size" : {
+                "x" : 1.0,
+                "y" : 1.0,
+                "z" : 1.0
+              },
+              "position" : {
+                "x" : 5.0,
+                "y" : 5.0,
+                "z" : 0.0
+              }
+            }
+          ]
+        },
+        {
+          "direction" : "SOUTH",
+          "color" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "texture":"CONCRETE",
+          "exhibits" : [
+            {
+              "name" : "Technik",
+              "description" : "Lorem ipsum dolor sit amet",
+              "path" : "5bd3292c64aa33a460bcdade/1/S/D_001258.jpg",
+              "type" : "IMAGE",
+              "size" : {
+                "x" : 1.0,
+                "y" : 1.0,
+                "z" : 1.0
+              },
+              "position" : {
+                "x" : 5.0,
+                "y" : 5.0,
+                "z" : 0.0
+              }
+            }
+          ]
+        },
+        {
+          "direction" : "WEST",
+          "color" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "texture":"NONE",
+          "exhibits" : []
+        }
+      ]
+    }
+  ]
+}
