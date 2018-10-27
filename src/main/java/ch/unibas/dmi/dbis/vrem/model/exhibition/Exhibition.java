@@ -43,9 +43,8 @@ public class Exhibition {
      * @param room
      */
     public boolean addRoom(Room room) {
-        if (!this.rooms.contains(room) && room.exhibition == null) {
+        if (!this.rooms.contains(room)) {
             this.rooms.add(room);
-            room.exhibition = this;
             return true;
         } else {
             return false;
