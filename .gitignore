@@ -1,5 +1,10 @@
 # Ignore IntellJ project files
 .idea/**
+.gradle/**
+
+
+# Ignore build files
+build/**
 
 # Compiled class file
 *.class
