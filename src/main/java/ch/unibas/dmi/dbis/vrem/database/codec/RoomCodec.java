@@ -54,7 +54,7 @@ public class RoomCodec implements Codec<Room> {
     public Room decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
         String text = null;
-        Texture floor = Texture.WOOD;
+        Texture floor = Texture.WOOD1;
         Texture ceiling = Texture.CONCRETE;
         Vector3f size = null;
         Vector3f position = null;

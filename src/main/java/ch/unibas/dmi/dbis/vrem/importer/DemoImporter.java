@@ -102,7 +102,7 @@ public class DemoImporter implements Runnable {
             walls.add(new Wall(Direction.WEST, Texture.WALLPAPER));
 
             /* Add new Room 1. */
-            final Room room1 = new Room("Room 1", walls, Texture.WOOD, Texture.CONCRETE, new Vector3f(10.0f, 3.0f, 10.0f), Vector3f.ORIGIN, new Vector3f(0.0f, 1.0f, 0.0f));
+            final Room room1 = new Room("Room 1", walls, Texture.WOOD1, Texture.CONCRETE, new Vector3f(10.0f, 3.0f, 10.0f), Vector3f.ORIGIN, new Vector3f(0.0f, 1.0f, 0.0f));
             exhibition.addRoom(room1);
 
             /* Parse the file and create the room. */
