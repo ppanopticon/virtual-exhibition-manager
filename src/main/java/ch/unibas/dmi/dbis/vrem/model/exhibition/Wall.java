@@ -1,6 +1,7 @@
 package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
+import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +47,9 @@ public class Wall {
      * @param exhibit
      */
     public boolean placeExhibit(Exhibit exhibit) {
+        if (exhibit.type != CulturalHeritageObject.CHOType.IMAGE) {
+            throw new IllegalArgumentException("Only images can be placed on walls.");
+        }
         if (!this.exhibits.contains(exhibit)) {
             this.exhibits.add(exhibit);
             return true;
