@@ -2,7 +2,6 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 
@@ -67,7 +66,7 @@ public class Room {
      * @return
      */
     public Wall getNorth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
     }
 
     /**
@@ -75,7 +74,7 @@ public class Room {
      * @return
      */
     public Wall getEast() {
-        return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+        return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
     }
 
     /**
@@ -83,7 +82,7 @@ public class Room {
      * @return
      */
     public Wall getSouth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
     }
 
     /**
@@ -91,7 +90,7 @@ public class Room {
      * @return
      */
     public Wall getWest() {
-        return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst().orElseThrow(() -> new InvalidStateException("This room is corrupted!"));
+        return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
     }
 
     /**
