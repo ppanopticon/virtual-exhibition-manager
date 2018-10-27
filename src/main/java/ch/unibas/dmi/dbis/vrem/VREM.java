@@ -1,27 +1,11 @@
 package ch.unibas.dmi.dbis.vrem;
 
-import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
-import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
 import ch.unibas.dmi.dbis.vrem.server.WebServer;
-import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.ListExhibitionsHandler;
-import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.LoadExhibitionHandler;
-
-import ch.unibas.dmi.dbis.vrem.server.handlers.content.RequestContentHandler;
 import com.github.rvesse.airline.annotations.Cli;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
 
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static spark.Spark.*;
 
 @Cli(name = "VREM", description = "Virtual Reality Exhibition Manager", commands = {WebServer.class}, defaultCommand = WebServer.class)
 public class VREM {
