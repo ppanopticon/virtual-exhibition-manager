@@ -29,6 +29,11 @@ public class Room {
     /** List of exhibits (only 3D models valid). */
     private final List<Exhibit> exhibits = new ArrayList<>();
 
+    public Room(String text, Texture floor, Texture ceiling,
+        Vector3f size, Vector3f position, Vector3f entrypoint) {
+        this(text,new ArrayList<>(4),floor,ceiling,size,position,entrypoint,null);
+    }
+
     /**
      *
      * @param text
@@ -86,6 +91,29 @@ public class Room {
      */
     public Wall getNorth() {
         return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+    }
+
+    public void setNorth(Wall wall){
+        setWall(Direction.NORTH, wall);
+    }
+
+    public void setEast(Wall wall){
+        setWall(Direction.EAST, wall);
+    }
+
+    public void setSouth(Wall wall){
+        setWall(Direction.SOUTH, wall);
+    }
+
+    public void setWest(Wall wall){
+        setWall(Direction.WEST, wall);
+    }
+
+    private void setWall(Direction dir, Wall w){
+        if(w.direction != dir){
+            throw new IllegalArgumentException("Wall direction not matching. Expected "+dir+", but "+w.direction+" given");
+        }
+        this.walls.add(dir.ordinal(),w);
     }
 
     /**

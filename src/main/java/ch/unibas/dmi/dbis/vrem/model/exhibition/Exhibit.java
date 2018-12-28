@@ -10,7 +10,7 @@ public class Exhibit extends CulturalHeritageObject{
     public final Vector3f position;
 
     /** */
-    public final Vector3f size ;
+    public Vector3f size ;
 
     /** */
     public final String audio;
