@@ -15,7 +15,7 @@ public class Room {
 
     public final Vector3f size;
 
-    public final Vector3f position;
+    public Vector3f position;
 
     public final Vector3f entrypoint;
 
@@ -113,7 +113,8 @@ public class Room {
         if(w.direction != dir){
             throw new IllegalArgumentException("Wall direction not matching. Expected "+dir+", but "+w.direction+" given");
         }
-        this.walls.add(dir.ordinal(),w);
+        //this.walls.add(dir.ordinal(),w);
+        this.walls.add(w);
     }
 
     /**

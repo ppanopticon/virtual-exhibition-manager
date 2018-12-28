@@ -7,7 +7,7 @@ import org.bson.types.ObjectId;
 
 public class Exhibit extends CulturalHeritageObject{
     /** */
-    public final Vector3f position;
+    public Vector3f position;
 
     /** */
     public Vector3f size ;

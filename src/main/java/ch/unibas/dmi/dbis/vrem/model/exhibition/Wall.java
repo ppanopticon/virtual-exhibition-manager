@@ -15,7 +15,7 @@ public class Wall {
     public final Texture texture;
 
     /** */
-    public final Direction direction;
+    public Direction direction;
 
     /** */
     private final List<Exhibit> exhibits = new ArrayList<>();

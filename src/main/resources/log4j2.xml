@@ -18,6 +18,10 @@
     </RollingFile>
   </Appenders>
   <Loggers>
+    <Logger name="ch.unibas.dmi.dbis.vrem.importer" level="DEBUG" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Logger>
     <Logger name="ch.unibas.dmi.dbis.pythia" level="DEBUG" additivity="true"/>
     <Logger name="ch.unibas.dmi.dbis.fnd.core" level="DEBUG" additivity="true"/>
     <Root level="WARN">
