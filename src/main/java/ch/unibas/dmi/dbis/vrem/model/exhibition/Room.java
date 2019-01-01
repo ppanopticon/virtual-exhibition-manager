@@ -2,150 +2,158 @@ package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Room {
 
-    public final String text;
+  public final String text;
 
-    public final Texture floor;
+  public final Texture floor;
 
-    public final Texture ceiling;
+  public final Texture ceiling;
 
-    public final Vector3f size;
+  public final Vector3f size;
+  public final Vector3f entrypoint;
+  public final String ambient;
+  /**
+   * List of exhibits (only 3D models valid).
+   */
+  private final List<Exhibit> exhibits = new ArrayList<>();
+  public Vector3f position;
+  /**
+   * List of walls (4 max).
+   */
+  private List<Wall> walls = new ArrayList<>(4);
 
-    public Vector3f position;
+  public Room(String text, Texture floor, Texture ceiling,
+      Vector3f size, Vector3f position, Vector3f entrypoint) {
+    this(text, new ArrayList<>(4), floor, ceiling, size, position, entrypoint, null);
+  }
 
-    public final Vector3f entrypoint;
+  /**
+   *
+   * @param text
+   * @param walls
+   * @param floor
+   * @param ceiling
+   * @param size
+   * @param position
+   * @param entrypoint
+   */
+  public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size,
+      Vector3f position, Vector3f entrypoint) {
+    this(text, walls, floor, ceiling, size, position, entrypoint, null);
+  }
 
+  /**
+   *
+   * @param text
+   * @param walls
+   * @param floor
+   * @param ceiling
+   * @param size
+   * @param position
+   * @param entrypoint
+   */
+  public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size,
+      Vector3f position, Vector3f entrypoint, String ambient) {
+    this.floor = floor;
+    this.ceiling = ceiling;
+    this.size = size;
+    this.text = text;
+    this.position = position;
+    this.entrypoint = entrypoint;
+    this.walls.addAll(walls);
+    this.ambient = ambient;
+  }
 
-    public final String ambient;
-
-
-    /** List of walls (4 max). */
-    private final List<Wall> walls = new ArrayList<>(4);
-
-    /** List of exhibits (only 3D models valid). */
-    private final List<Exhibit> exhibits = new ArrayList<>();
-
-    public Room(String text, Texture floor, Texture ceiling,
-        Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text,new ArrayList<>(4),floor,ceiling,size,position,entrypoint,null);
+  /**
+   *
+   * @param exhibit
+   * @return
+   */
+  public boolean placeExhibit(Exhibit exhibit) {
+    if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
+      throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
     }
-
-    /**
-     *
-     * @param text
-     * @param walls
-     * @param floor
-     * @param ceiling
-     * @param size
-     * @param position
-     * @param entrypoint
-     */
-    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, walls, floor, ceiling, size, position, entrypoint, null);
+    if (!this.exhibits.contains(exhibit)) {
+      this.exhibits.add(exhibit);
+      return true;
     }
+    return false;
+  }
 
-    /**
-     *
-     * @param text
-     * @param walls
-     * @param floor
-     * @param ceiling
-     * @param size
-     * @param position
-     * @param entrypoint
-     */
-    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
-        this.floor = floor;
-        this.ceiling = ceiling;
-        this.size = size;
-        this.text = text;
-        this.position = position;
-        this.entrypoint = entrypoint;
-        this.walls.addAll(walls);
-        this.ambient = ambient;
-    }
+  /**
+   *
+   * @return
+   */
+  public Wall getNorth() {
+    return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst()
+        .orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+  }
 
-    /**
-     *
-     * @param exhibit
-     * @return
-     */
-    public boolean placeExhibit(Exhibit exhibit) {
-        if (exhibit.type != CulturalHeritageObject.CHOType.MODEL) {
-            throw new IllegalArgumentException("Only 3D objects can be placed in a room.");
-        }
-        if (!this.exhibits.contains(exhibit)) {
-            this.exhibits.add(exhibit);
-            return true;
-        }
-        return false;
-    }
+  public void setNorth(Wall wall) {
+    setWall(Direction.NORTH, wall);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public Wall getNorth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.NORTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+  private void setWall(Direction dir, Wall w) {
+    if (w.direction != dir) {
+      throw new IllegalArgumentException(
+          "Wall direction not matching. Expected " + dir + ", but " + w.direction + " given");
     }
+    //this.walls.add(dir.ordinal(),w);
+    if (this.walls == null) {
+      this.walls = new ArrayList<>();
+    }
+    this.walls.add(w);
+  }
 
-    public void setNorth(Wall wall){
-        setWall(Direction.NORTH, wall);
-    }
+  /**
+   *
+   * @return
+   */
+  public Wall getEast() {
+    return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst()
+        .orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+  }
 
-    public void setEast(Wall wall){
-        setWall(Direction.EAST, wall);
-    }
+  public void setEast(Wall wall) {
+    setWall(Direction.EAST, wall);
+  }
 
-    public void setSouth(Wall wall){
-        setWall(Direction.SOUTH, wall);
-    }
+  /**
+   *
+   * @return
+   */
+  public Wall getSouth() {
+    return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst()
+        .orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+  }
 
-    public void setWest(Wall wall){
-        setWall(Direction.WEST, wall);
-    }
+  public void setSouth(Wall wall) {
+    setWall(Direction.SOUTH, wall);
+  }
 
-    private void setWall(Direction dir, Wall w){
-        if(w.direction != dir){
-            throw new IllegalArgumentException("Wall direction not matching. Expected "+dir+", but "+w.direction+" given");
-        }
-        //this.walls.add(dir.ordinal(),w);
-        this.walls.add(w);
-    }
+  /**
+   *
+   * @return
+   */
+  public Wall getWest() {
+    return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst()
+        .orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
+  }
 
-    /**
-     *
-     * @return
-     */
-    public Wall getEast() {
-        return this.walls.stream().filter(w -> w.direction == Direction.EAST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
+  public void setWest(Wall wall) {
+    setWall(Direction.WEST, wall);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public Wall getSouth() {
-        return this.walls.stream().filter(w -> w.direction == Direction.SOUTH).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Wall getWest() {
-        return this.walls.stream().filter(w -> w.direction == Direction.WEST).findFirst().orElseThrow(() -> new IllegalStateException("This room is corrupted!"));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public List<Exhibit> getExhibits() {
-        return Collections.unmodifiableList(this.exhibits);
-    }
+  /**
+   *
+   * @return
+   */
+  public List<Exhibit> getExhibits() {
+    return Collections.unmodifiableList(this.exhibits);
+  }
 }

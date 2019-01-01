@@ -13,7 +13,7 @@ public class CulturalHeritageObject {
 
     public final CHOType type;
 
-    public final String path;
+    public String path;
 
     public final String description;
 

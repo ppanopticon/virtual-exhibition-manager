@@ -10,7 +10,12 @@ import ch.unibas.dmi.dbis.vrem.config.Config;
 import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMWriter;
 import ch.unibas.dmi.dbis.vrem.model.Vector3f;
-import ch.unibas.dmi.dbis.vrem.model.exhibition.*;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Direction;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibit;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Exhibition;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Room;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Texture;
+import ch.unibas.dmi.dbis.vrem.model.exhibition.Wall;
 import ch.unibas.dmi.dbis.vrem.model.objects.CulturalHeritageObject.CHOType;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
@@ -22,7 +27,6 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,9 +38,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.FileUtils;
@@ -148,7 +150,7 @@ public class MuseumNightImporter implements Runnable {
 
       LOGGER.info("Starting to import exhibition at {}", exhibitionRoot);
       Arrays.stream(Objects.requireNonNull(exhibitionRoot.toFile().listFiles(File::isDirectory))).forEach(f -> {
-        if(f.getName().startsWith("__")){
+        if(f.getName().startsWith("__")){ // TODO Extract const
           return;
         }
         try {
@@ -232,6 +234,8 @@ public class MuseumNightImporter implements Runnable {
       try {
         String exhibitJson = new String(Files.readAllBytes(configPath), UTF_8);
         e = gson.fromJson(exhibitJson, Exhibit.class);
+        Path path = Paths.get(exhibitionRoot.toURI()).relativize(Paths.get(exhibitFile.toURI()));
+        e.path = path.toString().replace('\\','/');
       } catch (IOException e1) {
         e1.printStackTrace();
       }
@@ -248,8 +252,12 @@ public class MuseumNightImporter implements Runnable {
       } else {
         width = (200f / aspectRatio) / 100f;
       }
-      e.size = new Vector3f(width, height, 0);
-      e.position = calculatePosition(e, siblings);
+      if(e.size == null){
+        e.size = new Vector3f(width, height, 0);
+      }
+      if(e.position == null){
+        e.position = calculatePosition(e, siblings);
+      }
 
 
       return e;
