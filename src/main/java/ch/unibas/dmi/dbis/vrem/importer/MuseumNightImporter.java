@@ -252,10 +252,10 @@ public class MuseumNightImporter implements Runnable {
       } else {
         width = (200f / aspectRatio) / 100f;
       }
-      if(e.size == null){
+      if(e.size == null || (e.size.isNaN() || e.size.equals(Vector3f.ORIGIN))){
         e.size = new Vector3f(width, height, 0);
       }
-      if(e.position == null){
+      if(e.position == null || (e.position.isNaN()|| e.position.equals(Vector3f.ORIGIN))){
         e.position = calculatePosition(e, siblings);
       }
 
