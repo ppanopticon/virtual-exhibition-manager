@@ -14,8 +14,8 @@ public class Room {
 
   public final Texture ceiling;
 
-  public final Vector3f size;
-  public final Vector3f entrypoint;
+  public Vector3f size;
+  public Vector3f entrypoint;
   public final String ambient;
   /**
    * List of exhibits (only 3D models valid).

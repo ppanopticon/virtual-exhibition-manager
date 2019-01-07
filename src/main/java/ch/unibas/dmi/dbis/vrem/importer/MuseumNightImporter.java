@@ -73,7 +73,7 @@ public class MuseumNightImporter implements Runnable {
   public static final String JPG_EXTENSIO = "jpg";
   public static final String JSON_EXTENSION = "json";
   public static final Vector3f ROOM_SIZE = new Vector3f(10, 5, 10);
-  public static final Vector3f ENTRYPOINT = new Vector3f(5, 0, 5);
+  public static final Vector3f ENTRYPOINT = Vector3f.ORIGIN;
 
   public static final float ROOM_BORDER = 0.5f;
   public static final float EXHIBIT_PADDING = 1f;
@@ -190,6 +190,8 @@ public class MuseumNightImporter implements Runnable {
          ENTRYPOINT);
       LOGGER.debug("Created new room");
     }
+    roomConfig.size = ROOM_SIZE;
+    roomConfig.entrypoint = ENTRYPOINT;
     File north = Paths.get(room.getPath(), NORTH_WALL_NAME).toFile();
     File east = Paths.get(room.getPath(), EAST_WALL_NAME).toFile();
     File south = Paths.get(room.getPath(), SOUTH_WALL_NAME).toFile();
