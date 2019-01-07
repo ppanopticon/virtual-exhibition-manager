@@ -5,7 +5,7 @@
     "database" : "vrem"
   },
   "server" : {
-    "documentRoot" : "/path/to/root",
+    "documentRoot" : "C:/Projects/VREM/vrem/vrem/",
     "port" : 4567
   }
 }
