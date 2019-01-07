@@ -12,7 +12,7 @@ public class Wall {
     public final Vector3f color;
 
     /** */
-    public final Texture texture;
+    public final String texture;
 
     /** */
     public final Direction direction;
@@ -28,7 +28,7 @@ public class Wall {
     public Wall(Direction direction, Vector3f color) {
         this.direction = direction;
         this.color = color;
-        this.texture = Texture.NONE;
+        this.texture = Texture.NONE.toString();
     }
 
     /**
@@ -36,7 +36,7 @@ public class Wall {
      * @param direction
      * @param texture
      */
-    public Wall(Direction direction, Texture texture) {
+    public Wall(Direction direction, String texture) {
         this.direction = direction;
         this.color = Vector3f.UNIT;
         this.texture = texture;

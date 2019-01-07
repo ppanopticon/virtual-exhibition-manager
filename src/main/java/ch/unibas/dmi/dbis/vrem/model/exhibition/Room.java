@@ -9,9 +9,9 @@ public class Room {
 
     public final String text;
 
-    public final Texture floor;
+    public final String floor;
 
-    public final Texture ceiling;
+    public final String ceiling;
 
     public final Vector3f size;
 
@@ -40,7 +40,7 @@ public class Room {
      * @param entrypoint
      */
     public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
-        this(text, walls, floor, ceiling, size, position, entrypoint, null);
+        this(text, walls, floor.toString(), ceiling.toString(), size, position, entrypoint, null);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Room {
      * @param position
      * @param entrypoint
      */
-    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
+    public Room(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
         this.floor = floor;
         this.ceiling = ceiling;
         this.size = size;
