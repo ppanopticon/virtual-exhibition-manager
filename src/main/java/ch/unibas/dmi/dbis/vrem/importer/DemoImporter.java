@@ -96,10 +96,10 @@ public class DemoImporter implements Runnable {
 
             /* Prepare walls for Room 1. */
             final List<Wall> walls = new ArrayList<>();
-            walls.add(new Wall(Direction.NORTH, Texture.WALLPAPER));
-            walls.add(new Wall(Direction.EAST, Texture.WALLPAPER));
-            walls.add(new Wall(Direction.SOUTH, Texture.WALLPAPER));
-            walls.add(new Wall(Direction.WEST, Texture.WALLPAPER));
+            walls.add(new Wall(Direction.NORTH, Texture.WALLPAPER.toString()));
+            walls.add(new Wall(Direction.EAST, Texture.WALLPAPER.toString()));
+            walls.add(new Wall(Direction.SOUTH, Texture.WALLPAPER.toString()));
+            walls.add(new Wall(Direction.WEST, Texture.WALLPAPER.toString()));
 
             /* Add new Room 1. */
             final Room room1 = new Room("Room 1", walls, Texture.WOOD1, Texture.STARS, new Vector3f(10.0f, 3.0f, 10.0f), Vector3f.ORIGIN, new Vector3f(0.0f, 1.0f, 0.0f));

@@ -1,5 +1,7 @@
 # Virtual Reality Exhibition Manager (VREM)
-The Virtual Reality Exhibition Manager (VREM) is a tool that allows for configuration, storage of and access to VR exhibition definitions. It has been
+The Virtual Reality Exhibition Manager (VREM) is a tool that allows for configuration, storage of and access to VR exhibition definitions.
+This is the Backend. For the front end see https://github.com/dbisUnibas/virtual-exhibition-presenter
+It has been
 built as part of the [Open Cultural Data Hackathon 2018](http://make.opendata.ch/wiki/event:2018-10), held in Zurich, Switzerland.
 
 ## Building VREM
