@@ -20,7 +20,7 @@ public class Room {
   /**
    * List of exhibits (only 3D models valid).
    */
-  private final List<Exhibit> exhibits = new ArrayList<>();
+  private List<Exhibit> exhibits = new ArrayList<>();
   public Vector3f position;
   /**
    * List of walls (4 max).
@@ -154,6 +154,9 @@ public class Room {
    * @return
    */
   public List<Exhibit> getExhibits() {
+    if(this.exhibits == null){
+      exhibits = new ArrayList<>();
+    }
     return Collections.unmodifiableList(this.exhibits);
   }
 }

@@ -35,9 +35,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,29 +84,34 @@ public class MuseumNightImporter implements Runnable {
 
   @Required
   @Option(title = "Exhibition-Path", name = {"--path",
-     "-p"}, description = "Path to the exhibition root folder")
+      "-p"}, description = "Path to the exhibition root folder")
   private String exhibitionPath;
 
   @Option(title = "Exhibition-File", name = {"--exhibition",
-     "-e"}, description = "Path to the exhibition file")
+      "-e"}, description = "Path to the exhibition file")
   private String exhibitionFile;
 
   @Required
   @Option(title = "Output-File", name = {"--output",
-     "-o"}, description = "Output file: The json file to store the exhibition in")
+      "-o"}, description = "Output file: The json file to store the exhibition in")
   private String outputFile;
 
   @Option(title = "Configuration", name = {"--config",
-     "-c"}, description = "Path to configuration file")
+      "-c"}, description = "Path to configuration file")
   private String config;
 
   private Gson gson;
+
+  private Exhibition reference = null;
+
+  private Comparator<Exhibit> pathExhibitComparator = Comparator.comparing(e -> e.path);
+
 
   @Override
   public void run() {
     if (StringUtils.isBlank(outputFile) && StringUtils.isBlank(config)) {
       System.err
-         .println("Specify either output file by -o <file> option or config y -c <file> option.");
+          .println("Specify either output file by -o <file> option or config y -c <file> option.");
       return;
     }
 
@@ -119,7 +127,7 @@ public class MuseumNightImporter implements Runnable {
 
       if (hasConfig) {
         String json = new String(Files.readAllBytes(Paths.get(this.config)),
-           UTF_8);
+            UTF_8);
         config = gson.fromJson(json, Config.class);
       }
 
@@ -130,16 +138,19 @@ public class MuseumNightImporter implements Runnable {
 
 
       /* */
-      //final Path exhibitionFile = Paths.get(this.exhibitionFile);
+      final Path exhibitionFile = Paths.get(this.exhibitionFile);
+      String exhibitionJson = new String(Files.readAllBytes(exhibitionFile), UTF_8);
+      reference = gson.fromJson(exhibitionJson, Exhibition.class);
+      LOGGER.info("Loaded reference exhibition for name and description. {}", exhibitionFile);
 
       if (hasConfig) {
         /* Prepare database & DAO. */
         final CodecRegistry registry = CodecRegistries
-           .fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-              CodecRegistries.fromProviders(new VREMCodecProvider()));
+            .fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+                CodecRegistries.fromProviders(new VREMCodecProvider()));
         final ConnectionString connectionString = config.database.getConnectionString();
         final MongoClientSettings settings = MongoClientSettings.builder().codecRegistry(registry)
-           .applyConnectionString(connectionString).applicationName("VREM").build();
+            .applyConnectionString(connectionString).applicationName("VREM").build();
 
         final MongoClient client = MongoClients.create(settings);
         db = client.getDatabase(config.database.database);
@@ -149,18 +160,19 @@ public class MuseumNightImporter implements Runnable {
       Exhibition exhibition = new Exhibition("MuseumNight", "");
 
       LOGGER.info("Starting to import exhibition at {}", exhibitionRoot);
-      Arrays.stream(Objects.requireNonNull(exhibitionRoot.toFile().listFiles(File::isDirectory))).forEach(f -> {
-        if(f.getName().startsWith("__")){ // TODO Extract const
-          return;
-        }
-        try {
-          exhibition.addRoom(importRoom(exhibitionRoot.getParent(), f, exhibition.getRooms()) );
+      Arrays.stream(Objects.requireNonNull(exhibitionRoot.toFile().listFiles(File::isDirectory)))
+          .forEach(f -> {
+            if (f.getName().startsWith("__")) { // TODO Extract const
+              return;
+            }
+            try {
+              exhibition.addRoom(importRoom(exhibitionRoot.getParent(), f, exhibition.getRooms()));
 
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      });
-      LOGGER.debug("Created exhibition:\n{}",gson.toJson(exhibition));
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          });
+      //LOGGER.debug("Created exhibition:\n{}", gson.toJson(exhibition));
 
       LOGGER.info("Writing to outputfile {}", outputFile);
       FileWriter fw = new FileWriter(outputFile);
@@ -182,12 +194,13 @@ public class MuseumNightImporter implements Runnable {
 
     Room roomConfig;
     if (Paths.get(room.getPath(), ROOM_CONFIG_FILE).toFile().exists()) {
-      String configJson = new String(Files.readAllBytes(Paths.get(room.getPath(), ROOM_CONFIG_FILE)), UTF_8);
+      String configJson = new String(
+          Files.readAllBytes(Paths.get(room.getPath(), ROOM_CONFIG_FILE)), UTF_8);
       roomConfig = gson.fromJson(configJson, Room.class);
-      LOGGER.debug("Loaded room config:\n{}",gson.toJson(roomConfig));
+      LOGGER.debug("Loaded room config:\n{}", gson.toJson(roomConfig));
     } else {
       roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_SIZE, Vector3f.ORIGIN,
-         ENTRYPOINT);
+          ENTRYPOINT);
       LOGGER.debug("Created new room");
     }
     roomConfig.size = ROOM_SIZE;
@@ -209,9 +222,10 @@ public class MuseumNightImporter implements Runnable {
 
   private Wall importWall(Direction dir, File wallFolder, Path root) throws IOException {
     Wall wallConfig;
-    LOGGER.info("Importing wall {}",wallFolder);
+    LOGGER.info("Importing wall {}", wallFolder);
     if (Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE).toFile().exists()) {
-      String json = new String(Files.readAllBytes(Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE)), UTF_8);
+      String json = new String(
+          Files.readAllBytes(Paths.get(wallFolder.getPath(), WALL_CONFIG_FILE)), UTF_8);
       wallConfig = gson.fromJson(json, Wall.class);
       wallConfig.direction = dir;
       LOGGER.debug("Loaded wall config:\n{}", gson.toJson(wallConfig));
@@ -220,9 +234,11 @@ public class MuseumNightImporter implements Runnable {
       LOGGER.debug("Created new wall");
     }
 
-    Arrays.stream(Objects.requireNonNull(wallFolder.listFiles(f -> FileUtils.getFileExtension(f).equalsIgnoreCase(PNG_EXTENSION)))).forEach(f -> {
-      wallConfig.placeExhibit(importExhibit(root.toFile(), f, wallConfig.getExhibits()) );
-    });
+    Arrays.stream(Objects.requireNonNull(
+        wallFolder.listFiles(f -> FileUtils.getFileExtension(f).equalsIgnoreCase(PNG_EXTENSION))))
+        .forEach(f -> {
+          wallConfig.placeExhibit(importExhibit(root.toFile(), f, wallConfig.getExhibits()));
+        });
 
     return wallConfig;
   }
@@ -231,19 +247,21 @@ public class MuseumNightImporter implements Runnable {
     Exhibit e = null;
     LOGGER.info("Importing {}", exhibitFile.getName());
     String fileName = exhibitFile.getName().substring(0, exhibitFile.getName().lastIndexOf('.'));
-    Path configPath = Paths.get(exhibitFile.toURI()).getParent().resolve(fileName + "." + JSON_EXTENSION);
+    Path configPath = Paths.get(exhibitFile.toURI()).getParent()
+        .resolve(fileName + "." + JSON_EXTENSION);
     if (configPath.toFile().exists()) {
       try {
         String exhibitJson = new String(Files.readAllBytes(configPath), UTF_8);
         e = gson.fromJson(exhibitJson, Exhibit.class);
         Path path = Paths.get(exhibitionRoot.toURI()).relativize(Paths.get(exhibitFile.toURI()));
-        e.path = path.toString().replace('\\','/');
+        e.path = path.toString().replace('\\', '/');
       } catch (IOException e1) {
         e1.printStackTrace();
       }
     } else {
       Path path = Paths.get(exhibitionRoot.toURI()).relativize(Paths.get(exhibitFile.toURI()));
-      e = new Exhibit("", "", path.toString().replace('\\','/'), CHOType.IMAGE, Vector3f.ORIGIN, Vector3f.ORIGIN);
+      e = new Exhibit("", "", path.toString().replace('\\', '/'), CHOType.IMAGE, Vector3f.ORIGIN,
+          Vector3f.ORIGIN);
     }
     try {
       BufferedImage img = ImageIO.read(exhibitFile);
@@ -254,11 +272,17 @@ public class MuseumNightImporter implements Runnable {
       } else {
         width = (200f / aspectRatio) / 100f;
       }
-      if(e.size == null || (e.size.isNaN() || e.size.equals(Vector3f.ORIGIN))){
+      if (e.size == null || (e.size.isNaN() || e.size.equals(Vector3f.ORIGIN))) {
         e.size = new Vector3f(width, height, 0);
       }
-      if(e.position == null || (e.position.isNaN()|| e.position.equals(Vector3f.ORIGIN))){
+      if (e.position == null || (e.position.isNaN() || e.position.equals(Vector3f.ORIGIN))) {
         e.position = calculatePosition(e, siblings);
+      }
+      Optional<Exhibit> reference = findExhibitForPath(this.reference, e.path);
+      if(reference.isPresent()){
+        LOGGER.debug("Found reference {}", reference.get());
+        mergeDescription(reference.get(), e);
+        mergeName(reference.get(), e);
       }
 
 
@@ -270,19 +294,60 @@ public class MuseumNightImporter implements Runnable {
   }
 
 
-
-  private Vector3f calculatePosition(Exhibit e, List<Exhibit> siblings){
-    if(siblings.isEmpty()){
-      return new Vector3f(ROOM_BORDER+(e.size.x/2f), EXHIBIT_DEFAULT_HEIGHT, 0);
-    }else{
-      float dist = (float)siblings.stream().mapToDouble(exhibit -> exhibit.size.x+EXHIBIT_PADDING).sum();
-      return new Vector3f(ROOM_BORDER+dist+(e.size.x/2f), EXHIBIT_DEFAULT_HEIGHT, 0);
+  private Vector3f calculatePosition(Exhibit e, List<Exhibit> siblings) {
+    if (siblings.isEmpty()) {
+      return new Vector3f(ROOM_BORDER + (e.size.x / 2f), EXHIBIT_DEFAULT_HEIGHT, 0);
+    } else {
+      float dist = (float) siblings.stream()
+          .mapToDouble(exhibit -> exhibit.size.x + EXHIBIT_PADDING).sum();
+      return new Vector3f(ROOM_BORDER + dist + (e.size.x / 2f), EXHIBIT_DEFAULT_HEIGHT, 0);
     }
   }
 
-  private Vector3f calculatePosition(Room r, List<Room> siblings){
+  private Vector3f calculatePosition(Room r, List<Room> siblings) {
     // Totally arbitrary
-    return new Vector3f(siblings.size(), 0,0);
+    return new Vector3f(siblings.size(), 0, 0);
   }
+
+  /**
+   * Returns the first exhibit with that path
+   */
+  private Optional<Exhibit> findExhibitForPath(Exhibition exhibition, String path) {
+    Optional<Exhibit> out = Optional.empty();
+    LOGGER.trace("Finding exhibit for path {}", path);
+    if (exhibition != null) {
+      for (Room r : exhibition.getRooms()) {
+        List<Exhibit> exhibits = new ArrayList<>(r.getExhibits());
+        exhibits.addAll(r.getNorth().getExhibits());
+        exhibits.addAll(r.getEast().getExhibits());
+        exhibits.addAll(r.getSouth().getExhibits());
+        exhibits.addAll(r.getWest().getExhibits());
+        for (Exhibit e : exhibits) {
+          LOGGER.trace("Probe: {}, needle: {}", e.path, path);
+          if (path.equals(e.path)) {
+            out = Optional.of(e);
+          }
+        }
+      }
+      LOGGER.trace("Exhibit for path: {}", out);
+
+    }else{
+      LOGGER.trace("Couldn't find exhibit for path, no exhibition provided");
+    }
+    return out;
+  }
+
+  private void mergeDescription(Exhibit src, Exhibit dest) {
+    if (StringUtils.isNotBlank(src.description) && StringUtils.isBlank(dest.description)) {
+      dest.description = src.description;
+    }
+  }
+
+  private void mergeName(Exhibit src, Exhibit dest) {
+    if (StringUtils.isNotBlank(src.name) && StringUtils.isBlank(dest.name)) {
+      dest.name = src.name;
+    }
+  }
+
 
 }
