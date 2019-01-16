@@ -230,7 +230,7 @@ public class MuseumNightImporter implements Runnable {
       wallConfig.direction = dir;
       LOGGER.debug("Loaded wall config:\n{}", gson.toJson(wallConfig));
     } else {
-      wallConfig = new Wall(dir, Texture.NONE);
+      wallConfig = new Wall(dir, Texture.NONE.name());
       LOGGER.debug("Created new wall");
     }
 

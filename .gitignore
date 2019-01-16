@@ -1,7 +1,8 @@
 # Ignore IntellJ project files
 .idea/**
 .gradle/**
-
+# Ignore IntelliJ build files
+out/**
 
 # Ignore build files
 build/**

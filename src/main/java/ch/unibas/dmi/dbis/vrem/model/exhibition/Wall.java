@@ -11,8 +11,8 @@ public class Wall {
   /** */
   public final Vector3f color;
 
-  /** */
-  public final Texture texture;
+    /** */
+    public final String texture;
 
   /** */
   public Direction direction;
@@ -20,27 +20,27 @@ public class Wall {
   /** */
   private List<Exhibit> exhibits = new ArrayList<>();
 
-  /**
-   *
-   * @param direction
-   * @param color
-   */
-  public Wall(Direction direction, Vector3f color) {
-    this.direction = direction;
-    this.color = color;
-    this.texture = Texture.NONE;
-  }
+    /**
+     *
+     * @param direction
+     * @param color
+     */
+    public Wall(Direction direction, Vector3f color) {
+        this.direction = direction;
+        this.color = color;
+        this.texture = Texture.NONE.toString();
+    }
 
-  /**
-   *
-   * @param direction
-   * @param texture
-   */
-  public Wall(Direction direction, Texture texture) {
-    this.direction = direction;
-    this.color = Vector3f.UNIT;
-    this.texture = texture;
-  }
+    /**
+     *
+     * @param direction
+     * @param texture
+     */
+    public Wall(Direction direction, String texture) {
+        this.direction = direction;
+        this.color = Vector3f.UNIT;
+        this.texture = texture;
+    }
 
   /**
    *

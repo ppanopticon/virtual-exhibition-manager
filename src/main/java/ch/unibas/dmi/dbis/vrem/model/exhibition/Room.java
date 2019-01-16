@@ -10,9 +10,9 @@ public class Room {
 
   public final String text;
 
-  public final Texture floor;
+    public final String floor;
 
-  public final Texture ceiling;
+    public final String ceiling;
 
   public Vector3f size;
   public Vector3f entrypoint;
@@ -29,45 +29,43 @@ public class Room {
 
   public Room(String text, Texture floor, Texture ceiling,
       Vector3f size, Vector3f position, Vector3f entrypoint) {
-    this(text, new ArrayList<>(4), floor, ceiling, size, position, entrypoint, null);
+    this(text, new ArrayList<>(4), floor.name(), ceiling.name(), size, position, entrypoint, null);
   }
 
-  /**
-   *
-   * @param text
-   * @param walls
-   * @param floor
-   * @param ceiling
-   * @param size
-   * @param position
-   * @param entrypoint
-   */
-  public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size,
-      Vector3f position, Vector3f entrypoint) {
-    this(text, walls, floor, ceiling, size, position, entrypoint, null);
-  }
+    /**
+     *
+     * @param text
+     * @param walls
+     * @param floor
+     * @param ceiling
+     * @param size
+     * @param position
+     * @param entrypoint
+     */
+    public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size, Vector3f position, Vector3f entrypoint) {
+        this(text, walls, floor.toString(), ceiling.toString(), size, position, entrypoint, null);
+    }
 
-  /**
-   *
-   * @param text
-   * @param walls
-   * @param floor
-   * @param ceiling
-   * @param size
-   * @param position
-   * @param entrypoint
-   */
-  public Room(String text, List<Wall> walls, Texture floor, Texture ceiling, Vector3f size,
-      Vector3f position, Vector3f entrypoint, String ambient) {
-    this.floor = floor;
-    this.ceiling = ceiling;
-    this.size = size;
-    this.text = text;
-    this.position = position;
-    this.entrypoint = entrypoint;
-    this.walls.addAll(walls);
-    this.ambient = ambient;
-  }
+    /**
+     *
+     * @param text
+     * @param walls
+     * @param floor
+     * @param ceiling
+     * @param size
+     * @param position
+     * @param entrypoint
+     */
+    public Room(String text, List<Wall> walls, String floor, String ceiling, Vector3f size, Vector3f position, Vector3f entrypoint, String ambient) {
+        this.floor = floor;
+        this.ceiling = ceiling;
+        this.size = size;
+        this.text = text;
+        this.position = position;
+        this.entrypoint = entrypoint;
+        this.walls.addAll(walls);
+        this.ambient = ambient;
+    }
 
   /**
    *

@@ -55,8 +55,8 @@ public class RoomCodec implements Codec<Room> {
     public Room decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
         String text = null;
-        Texture floor = Texture.WOOD1;
-        Texture ceiling = Texture.CONCRETE;
+        String floor = Texture.WOOD1.name();
+        String ceiling = Texture.CONCRETE.name();
         Vector3f size = null;
         Vector3f position = null;
         Vector3f entrypoint = null;
@@ -70,10 +70,10 @@ public class RoomCodec implements Codec<Room> {
                     text = reader.readString();
                     break;
                 case FIELD_NAME_FLOOR:
-                    floor = Texture.valueOf(reader.readString());
+                    floor = reader.readString();
                     break;
                 case FIELD_NAME_CEILING:
-                    ceiling = Texture.valueOf(reader.readString());
+                    ceiling = reader.readString();
                     break;
                 case FIELD_NAME_SIZE:
                     size = this.vectorCodec.decode(reader, decoderContext);
@@ -118,8 +118,8 @@ public class RoomCodec implements Codec<Room> {
     public void encode(BsonWriter writer, Room value, EncoderContext encoderContext) {
         writer.writeStartDocument();
             writer.writeString(FIELD_NAME_TEXT, value.text);
-            writer.writeString(FIELD_NAME_FLOOR, value.floor.name());
-            writer.writeString(FIELD_NAME_CEILING, value.ceiling.name());
+            writer.writeString(FIELD_NAME_FLOOR, value.floor);
+            writer.writeString(FIELD_NAME_CEILING, value.ceiling);
             writer.writeName(FIELD_NAME_SIZE);
             this.vectorCodec.encode(writer, value.size, encoderContext);
             writer.writeName(FIELD_NAME_POSITION);
