@@ -3,9 +3,11 @@ package ch.unibas.dmi.dbis.vrem.server;
 import ch.unibas.dmi.dbis.vrem.config.Config;
 import ch.unibas.dmi.dbis.vrem.database.codec.VREMCodecProvider;
 import ch.unibas.dmi.dbis.vrem.database.dao.VREMReader;
+import ch.unibas.dmi.dbis.vrem.database.dao.VREMWriter;
 import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.ListExhibitionsHandler;
 import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.LoadExhibitionHandler;
 import ch.unibas.dmi.dbis.vrem.server.handlers.content.RequestContentHandler;
+import ch.unibas.dmi.dbis.vrem.server.handlers.exhibition.SaveExhibitionHandler;
 import com.github.rvesse.airline.annotations.Command;
 import com.github.rvesse.airline.annotations.Option;
 import com.google.gson.Gson;
@@ -23,9 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static spark.Spark.after;
-import static spark.Spark.get;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 
 @Command(name = "server", description = "Removes a new stream from a running Pythia server.")
@@ -48,6 +48,7 @@ public class WebServer implements Runnable {
             final MongoClient client = MongoClients.create(settings);
             final MongoDatabase db = client.getDatabase(config.database.database);
             final VREMReader reader = new VREMReader(db);
+            final VREMWriter writer = new VREMWriter(db);
 
             /* Set port. */
             port(config.server.getPort());
@@ -61,6 +62,7 @@ public class WebServer implements Runnable {
             get("/content/get/:path", new RequestContentHandler(docRoot));
             get("/exhibitions/list", new ListExhibitionsHandler(reader));
             get("/exhibitions/load/:id", new LoadExhibitionHandler(reader));
+            post("/exhibitions/save", new SaveExhibitionHandler(writer));
 
             /* Configure the result after processing was completed. */
             after((request, response) -> {

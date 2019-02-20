@@ -13,7 +13,9 @@ public interface ActionHandler<A> extends Route {
      * @return Object resulting from the invocation.
      * @throws ActionHandlerException If an error occurs during invocation.
      */
-    Object doGet(Map<String,String> parameters) throws ActionHandlerException;
+    default Object doGet(Map<String,String> parameters) throws ActionHandlerException {
+        throw new MethodNotSupportedException("HTTP GET method is not supported by '" + this.getClass().getSimpleName() + "'.");
+    }
 
     /**
      * This method gets invoked by the router after a DELETE request has been processed. It takes parameters and does something meaningful with it.
@@ -24,7 +26,7 @@ public interface ActionHandler<A> extends Route {
      */
     default void doDelete(Map<String,String> parameters) throws ActionHandlerException {
         throw new MethodNotSupportedException("HTTP DELETE method is not supported by '" + this.getClass().getSimpleName() + "'.");
-    };
+    }
 
     /**
      * This method gets invoked by the router after a POST request has been processed. It takes an optional context object and parameters and does
@@ -37,7 +39,7 @@ public interface ActionHandler<A> extends Route {
      */
     default Object doPost(A context, Map<String,String> parameters) throws ActionHandlerException {
         throw new MethodNotSupportedException("HTTP POST method is not supported by '" + this.getClass().getSimpleName() + "'.");
-    };
+    }
 
     /**
      * This method gets invoked by the router after a POST request has been processed. It takes an optional context object and parameters and does
@@ -50,7 +52,7 @@ public interface ActionHandler<A> extends Route {
      */
     default Object doPut(A context, Map<String,String> parameters) throws ActionHandlerException {
         throw new MethodNotSupportedException("HTTP PUT method is not supported by '" + this.getClass().getSimpleName() + "'.");
-    };
+    }
 
     /**
      * Must return the class of type A. Required due to type-erasure.
