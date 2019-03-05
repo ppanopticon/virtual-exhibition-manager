@@ -7,7 +7,7 @@ built as part of the [Open Cultural Data Hackathon 2018](http://make.opendata.ch
 ## Building VREM
 VREM can be built using [Gradle](http://gradle.org/). Building and running it is as easy as
 ```
- git clone https://github.com/ppanopticon/virtual-exhibition-manager.git vrem
+ git clone https://github.com/dbisUnibas/virtual-exhibition-manager.git vrem
  cd vrem
  ./gradlew clean deploy
  cd build/libs
