@@ -9,13 +9,13 @@ public class CulturalHeritageObject {
 
     public final String id;
 
-    public final String name;
+    public String name;
 
     public final CHOType type;
 
-    public final String path;
+    public String path;
 
-    public final String description;
+    public String description;
 
     public final Map<String,String> metadata = new HashMap<>();
 

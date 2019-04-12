@@ -7,10 +7,10 @@ import org.bson.types.ObjectId;
 
 public class Exhibit extends CulturalHeritageObject{
     /** */
-    public final Vector3f position;
+    public Vector3f position = Vector3f.NaN;
 
     /** */
-    public final Vector3f size ;
+    public Vector3f size = Vector3f.NaN;
 
     /** */
     public final String audio;
