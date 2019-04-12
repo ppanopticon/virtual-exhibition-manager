@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Starts a mongo db docker container if not previously started.
 
 # List containers with vrem-container anywhere
