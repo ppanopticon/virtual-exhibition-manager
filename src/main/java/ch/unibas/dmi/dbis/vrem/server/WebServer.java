@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import static spark.Spark.*;
 
 
-@Command(name = "server", description = "Removes a new stream from a running Pythia server.")
+@Command(name = "server", description = "Start the web server")
 public class WebServer implements Runnable {
 
     @Option(title = "Configuration", name = {"--config", "-c"}, description = "Path to configuration file")
