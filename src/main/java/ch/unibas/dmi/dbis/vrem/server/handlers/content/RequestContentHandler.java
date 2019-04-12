@@ -15,9 +15,8 @@ import spark.Route;
 
 public class RequestContentHandler implements Route {
 
-
     private final Path root;
-    private Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(RequestContentHandler.class);
 
     /**
      *
