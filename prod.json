@@ -5,7 +5,7 @@
     "database" : "vrem"
   },
   "server" : {
-    "documentRoot" : "C:/Projects/VREM/vrem/vrem/",
+    "documentRoot" : "../vre-fantasy",
     "port" : 4567
   }
 }

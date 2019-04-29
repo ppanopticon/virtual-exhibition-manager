@@ -37,7 +37,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
     @Override
     public Exhibition decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
-        ObjectId id = null;
+        String id = null;
         String name = null;
         String description = null;
         List<Room> rooms = new LinkedList<>();
@@ -45,7 +45,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
         while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             switch (reader.readName()) {
                 case FIELD_NAME_ID:
-                    id = reader.readObjectId();
+                    id = reader.readString();
                     break;
                 case FIELD_NAME_TEXT:
                     name = reader.readString();
@@ -76,7 +76,7 @@ public class ExhibitionCodec implements Codec<Exhibition> {
     @Override
     public void encode(BsonWriter writer, Exhibition value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-            writer.writeObjectId(FIELD_NAME_ID, new ObjectId(value.id));
+            writer.writeString(FIELD_NAME_ID, value.id);
             writer.writeString(FIELD_NAME_TEXT, value.name);
             writer.writeString(FIELD_NAME_DESCRIPTION, value.description);
             writer.writeName(FIELD_NAME_ROOMS);

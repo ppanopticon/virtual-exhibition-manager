@@ -91,12 +91,14 @@ public class ExhibitionImporter implements Runnable {
     @Option(title = "Configuration", name = {"--config", "-c"}, description = "Path to configuration file")
     private String config;
 
-    @Option(title= "Exhibition-Name", name= {"--name"}, description = "Name of the exhibition to be imported")
+    @Option(title = "Exhibition-Name", name = {"--name"}, description = "Name of the exhibition to be imported")
     private String exhibitionName = "default-name";
 
-    @Option(title= "Exhibition-Description", name= {"--description"}, description = "Description of the exhibition to be imported")
+    @Option(title = "Exhibition-Description", name = {"--description"}, description = "Description of the exhibition to be imported")
     private String exhibitionDescription = "";
 
+    @Option(title = "Exhibition-ID", name = {"--id"}, description = "ID of the exhibition to be imported")
+    private String id = null;
 
     private Gson gson;
 
@@ -149,7 +151,12 @@ public class ExhibitionImporter implements Runnable {
                 writer = new VREMWriter(db);
             }
 
-            Exhibition exhibition = new Exhibition(exhibitionName, exhibitionDescription);
+            Exhibition exhibition;
+            if (id != null) {
+                exhibition = new Exhibition(id, exhibitionName, exhibitionDescription);
+            } else {
+                exhibition = new Exhibition(exhibitionName, exhibitionDescription);
+            }
 
             LOGGER.info("Starting to import exhibition at {}", exhibitionRoot);
             Arrays.stream(Objects.requireNonNull(exhibitionRoot.toFile().listFiles(File::isDirectory))).forEach(f -> {
@@ -245,7 +252,13 @@ public class ExhibitionImporter implements Runnable {
         if (configPath.toFile().exists()) {
             try {
                 String exhibitJson = new String(Files.readAllBytes(configPath), UTF_8);
-                e = gson.fromJson(exhibitJson, Exhibit.class);
+                try {
+                    e = gson.fromJson(exhibitJson, Exhibit.class);
+                } catch (Exception err) {
+                    LOGGER.error("Error while parsing json from {}", configPath);
+                    err.printStackTrace();
+                    System.exit(-100);
+                }
                 Path path = Paths.get(exhibitionRoot.toURI()).relativize(Paths.get(exhibitFile.toURI()));
                 e.path = path.toString().replace('\\', '/');
             } catch (IOException e1) {

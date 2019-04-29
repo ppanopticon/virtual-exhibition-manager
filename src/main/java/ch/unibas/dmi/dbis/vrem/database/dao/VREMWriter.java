@@ -24,7 +24,7 @@ public class VREMWriter extends VREMDao {
      */
     public boolean saveExhibition(Exhibition exhibition) {
         final MongoCollection<Exhibition> collection = this.database.getCollection(EXHIBITION_COLLECTION, Exhibition.class);
-        final UpdateResult result = collection.replaceOne(Filters.eq("_id", new ObjectId(exhibition.id)), exhibition);
+        final UpdateResult result = collection.replaceOne(Filters.eq("_id", exhibition.id), exhibition);
         if (result.getMatchedCount() == 0) {
             collection.insertOne(exhibition);
         } else if (result.getModifiedCount() == 0) {

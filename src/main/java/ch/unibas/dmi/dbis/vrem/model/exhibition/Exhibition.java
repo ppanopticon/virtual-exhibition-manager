@@ -16,25 +16,21 @@ public class Exhibition {
 
     private final List<Room> rooms = new ArrayList<>();
 
-    /**
-     *
-     */
     public Exhibition(ObjectId id, String name, String description) {
-        this.id = id.toString();
+        this(id.toString(), name, description);
+    }
+
+    public Exhibition(String id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    /**
-     *
-     */
     public Exhibition(String name, String description) {
         this(new ObjectId(), name, description);
     }
 
-    /**
-     *
-     */
+
     public boolean addRoom(Room room) {
         if (!this.rooms.contains(room)) {
             this.rooms.add(room);
@@ -44,9 +40,11 @@ public class Exhibition {
         }
     }
 
-    /**
-     *
-     */
+    @Override
+    public String toString() {
+        return "Exhibition{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", description='" + description + '\'' + ", rooms=" + rooms + '}';
+    }
+
     public List<Room> getRooms() {
         if (rooms == null) {
             return Collections.unmodifiableList(new ArrayList<>());
