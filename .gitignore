@@ -1,6 +1,7 @@
 # Ignore IntellJ project files
 .idea/**
 .gradle/**
+*.iml
 # Ignore IntelliJ build files
 out/**
 
@@ -34,3 +35,4 @@ hs_err_pid*
 
 # Temp files
 *~
+*.DS_Store
