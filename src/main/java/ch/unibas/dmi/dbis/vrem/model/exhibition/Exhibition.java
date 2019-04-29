@@ -1,10 +1,9 @@
 package ch.unibas.dmi.dbis.vrem.model.exhibition;
 
-import org.bson.types.ObjectId;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 public class Exhibition {
 
@@ -19,9 +18,6 @@ public class Exhibition {
 
     /**
      *
-     * @param id
-     * @param name
-     * @param description
      */
     public Exhibition(ObjectId id, String name, String description) {
         this.id = id.toString();
@@ -31,8 +27,6 @@ public class Exhibition {
 
     /**
      *
-     * @param name
-     * @param description
      */
     public Exhibition(String name, String description) {
         this(new ObjectId(), name, description);
@@ -40,7 +34,6 @@ public class Exhibition {
 
     /**
      *
-     * @param room
      */
     public boolean addRoom(Room room) {
         if (!this.rooms.contains(room)) {
@@ -53,9 +46,11 @@ public class Exhibition {
 
     /**
      *
-     * @return
      */
     public List<Room> getRooms() {
+        if (rooms == null) {
+            return Collections.unmodifiableList(new ArrayList<>());
+        }
         return Collections.unmodifiableList(this.rooms);
     }
 }
