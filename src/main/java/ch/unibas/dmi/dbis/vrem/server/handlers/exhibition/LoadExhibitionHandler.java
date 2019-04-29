@@ -15,9 +15,6 @@ public class LoadExhibitionHandler extends ParsingActionHandler<Exhibition> {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
-    /**
-     *
-     */
     public LoadExhibitionHandler(VREMReader reader) {
         this.reader = reader;
     }

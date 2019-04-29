@@ -23,13 +23,8 @@ public class ExhibitionCodec implements Codec<Exhibition> {
     public final String FIELD_NAME_DESCRIPTION = "description";
     public final String FIELD_NAME_ROOMS = "rooms";
 
-    /** */
     private final Codec<Room> codec;
 
-    /**
-     *
-     * @param registry
-     */
     public ExhibitionCodec(CodecRegistry registry) {
         this.codec = registry.get(Room.class);
     }

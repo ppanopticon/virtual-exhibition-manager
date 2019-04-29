@@ -195,7 +195,7 @@ public class ExhibitionImporter implements Runnable {
         if (Paths.get(room.getPath(), ROOM_CONFIG_FILE).toFile().exists()) {
             String configJson = new String(Files.readAllBytes(Paths.get(room.getPath(), ROOM_CONFIG_FILE)), UTF_8);
             roomConfig = gson.fromJson(configJson, Room.class);
-            LOGGER.debug("Loaded room config:\n{}", gson.toJson(roomConfig));
+            LOGGER.trace("Loaded room config:\n{}", gson.toJson(roomConfig));
         } else {
             roomConfig = new Room(room.getName(), Texture.NONE, Texture.NONE, ROOM_SIZE, Vector3f.ORIGIN, ENTRYPOINT);
             LOGGER.debug("Created new room");

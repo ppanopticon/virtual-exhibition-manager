@@ -11,11 +11,6 @@ public class SaveExhibitionHandler extends ParsingActionHandler<Exhibition> {
 
     private final VREMWriter writer;
 
-    /**
-     * Default constructor
-     *
-     * @param writer
-     */
     public SaveExhibitionHandler(VREMWriter writer) {
         this.writer = writer;
     }
