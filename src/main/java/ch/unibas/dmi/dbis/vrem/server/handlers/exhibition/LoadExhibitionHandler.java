@@ -13,7 +13,7 @@ public class LoadExhibitionHandler extends ParsingActionHandler<Exhibition> {
 
     private final static String ATTRIBUTE_ID = ":id";
 
-    private final static Logger LOGGER = LogManager.getLogger();
+    private final static Logger LOGGER = LogManager.getLogger(LoadExhibitionHandler.class);
 
     public LoadExhibitionHandler(VREMReader reader) {
         this.reader = reader;

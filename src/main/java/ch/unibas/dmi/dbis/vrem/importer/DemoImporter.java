@@ -41,7 +41,7 @@ public class DemoImporter implements Runnable {
 
 
 
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger(DemoImporter.class);
 
     public static final String FIELD_NAME_IMAGE = "\uFEFFBildcode";
     public static final String FIELD_NAME_OBJECT_NUMBER = "Inventarnummer";
