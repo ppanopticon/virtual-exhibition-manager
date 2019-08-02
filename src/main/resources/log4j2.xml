@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration name="CoreConfig" status="INFO">
   <Properties>
-    <Property name="loggingPattern">[%d{HH:mm:ss.SSS}][%-5level][%t] %C{1} - %msg%n</Property>
+    <Property name="loggingPattern">[%d{HH:mm:ss.SSS}][%-5level][%t] %c{2} - %msg%n</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">

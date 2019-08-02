@@ -59,7 +59,7 @@ import spark.utils.StringUtils;
 @Command(name = "import-folder", description = "Imports a folder-based exhibition")
 public class ExhibitionImporter implements Runnable {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(ExhibitionImporter.class.getName());
 
     public static final String NORTH_WALL_NAME = "north";
     public static final String EAST_WALL_NAME = "east";
